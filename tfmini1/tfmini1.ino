@@ -1,7 +1,13 @@
 #include <SoftwareSerial.h>
 #include "TFMini.h"
 TFMini tfmini;
- 
+
+
+int redPin = 11; //select the pin for the red LED
+int bluePin =10; // select the pin for the  blue LED
+int greenPin =9;// select the pin for the green LED 
+int val;
+
 SoftwareSerial SerialTFMini(2, 3);          //The only value that matters here is the first one, 2, Rx
  
 void getTFminiData(int* distance, int* strength)
@@ -44,6 +50,9 @@ void getTFminiData(int* distance, int* strength)
  
 void setup()
 {
+  pinMode(redPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
   Serial.begin(115200);       //Initialize hardware serial port (serial debug port)
   while (!Serial);            // wait for serial port to connect. Needed for native USB port only
   Serial.println ("Initializing...");
@@ -69,6 +78,16 @@ void loop()
     }
     if (distance > 70)
     {
+      analogWrite(redPin,200);
+      analogWrite(bluePin,0);
+      analogWrite(greenPin,0);
+      delay(10);
+    }
+    else
+    {
+      analogWrite(redPin,0);
+      analogWrite(bluePin,0);
+      analogWrite(greenPin,0);
       
     }
   }
