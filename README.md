@@ -1,12 +1,12 @@
-מה עוד צריך לבדוק:
-	-בדיקת אמינות בתנאי תאורה גבוההים
-	-בדיקת אמינות תנאי תאורה נמוכים
-	-בדיקת כיסא גלגלים 
-	-מרחק התראה רצוי וזווית קיבוע בהתאם
-	-מה הערך הרצוי של STRENGTH
+Test:  
+	- Low light  
+	- High light  
+	- 
 	
-	
-מה צריך לממש:
-	-ללמוד PROCESSING
-	-ללמוד לחבר את הPROCESSING לפלט של הארדואינו
-	-
+Implement:  
+	- Procesessing
+	- Connect Processing to Arduino output  
+	- Check that Mad Zavit works properly  
+	- Create Box  
+Think about:  
+	- Strength factor in TFMini
