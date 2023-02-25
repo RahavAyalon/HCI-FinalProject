@@ -12,8 +12,12 @@ int val;
 float currentAverage = 0;
 float lastAverage = 0;
 int counter = 0;
-int changeCounter = 0;
-float thirtytwo = 32;
+int changeCounter = 0;                //how many times the 
+float LR = 0.1;
+
+float angle = 45;          //angel (in degrees) of the sensor
+float hight = 61;          //hight (in cm) of the sensor
+float initDistance;   //expected diagonal distance based on the angle and hight 
 
 SoftwareSerial SerialTFMini(2, 3);          //The only value that matters here is the first one, 2, Rx
  
@@ -53,7 +57,12 @@ void getTFminiData(float* distance, float* strength)
     }
   }
 }
- 
+
+void calculateInitDistance()
+{
+  float angle_rad = (angle * PI) / 180;       //convert degrees to radians
+  initDistance = hight * (1 / cos(angle_rad));
+}
  
 void setup()
 {
@@ -74,10 +83,11 @@ void setup()
     {
       getTFminiData(&distance, &strength);
     }
-    lastAverage += (distance / thirtytwo);   
-//    lastAverage += float(distance >> five);    //LSH 5 = divide by 32  
-
+    lastAverage += (distance / 32);   
   }
+
+  calculateInitDistance();
+
   analogWrite(redPin, 0);
   analogWrite(bluePin, 0);
   analogWrite(greenPin, 200);
@@ -85,7 +95,6 @@ void setup()
   analogWrite(redPin, 0);
   analogWrite(bluePin, 0);
   analogWrite(greenPin, 0);
-
 }
  
 void loop()
@@ -100,7 +109,6 @@ void loop()
   }
   
 //  Serial.println(counter);
-
   Serial.println(distance);
 
   
@@ -114,48 +122,24 @@ void loop()
     
 //  cyclicArray[0] = distance;          //insert distance measurment into first cell of cyclicArray
 //  currentAverage += float(distance >> five);    //LSH 5 = divide by 32  
-  currentAverage += distance / thirtytwo;    //divide by 32  
 
 
-  counter++;                              //update counter
-
+  currentAverage += distance / 32;     
+  counter++;                          //update counter
+       
   if (counter == 32){
       counter = 0;                     //we reset counter to refill cyclicArray once again
 
       Serial.print("current ");
       Serial.println(currentAverage,0);
-
       Serial.print("last ");
       Serial.println(lastAverage,0);
+      Serial.print("init ");
+      Serial.println(initDistance,0);
 
-  
-     if (lastAverage + 40 < currentAverage){   //there is a diviation above the tolorance
-      if (changeCounter == 4){
-        analogWrite(redPin,200);
-        analogWrite(bluePin,0);
-        analogWrite(greenPin,0);
-        delay(3000);
+ 
 
-        analogWrite(redPin,0);
-        analogWrite(bluePin,0);
-        analogWrite(greenPin,0);
-        
-        changeCounter = 0;                  //check if we want to reset or not
-        currentAverage = 0;
-      }
-      
-      else{                                //there is change but still uncertain
-        changeCounter++;
-        currentAverage = 0;
-
-      }
-     }
-     else if (7 < currentAverage and currentAverage < lastAverage - 10){
-           currentAverage = 0;
-      
-     }
-     
-     else if (currentAverage < 7){   //there is a diviation above the tolorance
+      if (currentAverage < 10){   //something is very close to the sensor
         analogWrite(redPin,0);
         analogWrite(bluePin,200);
         analogWrite(greenPin,0);
@@ -163,17 +147,41 @@ void loop()
         analogWrite(redPin,0);
         analogWrite(bluePin,0);
         analogWrite(greenPin,0);
-
-//        changeCounter = 0;                  //check if we want to reset or not
-        currentAverage = 0;
-     }
-
-     
-     else{                                //change is within tolorance
-      lastAverage = currentAverage;
       currentAverage = 0;
-      changeCounter = 0;
+   }
+   
+     else if (lastAverage < currentAverage){
+       if (lastAverage + 40 < currentAverage){   //there is a diviation above the tolorance
+        if (changeCounter == 4){
+          analogWrite(redPin,200);
+          analogWrite(bluePin,0);
+          analogWrite(greenPin,0);
+          delay(3000);
+          analogWrite(redPin,0);
+          analogWrite(bluePin,0);
+          analogWrite(greenPin,0);
+          
+          changeCounter = 0;                  //check if we want to reset or not
+//          currentAverage = 0;
+        }
+        else{                                //there is change but still uncertain
+          changeCounter++;
+//          currentAverage = 0;
+        }
+        
+       }
+      else{                                //change is within tolorance - we increase last
+        lastAverage += (currentAverage - lastAverage) * LR;
+//        currentAverage = 0;
+        changeCounter = 0;
+      }
+     currentAverage = 0;
      }
-      
+
+     else if(lastAverage > currentAverage and lastAverage > initDistance - 1){      //we decrease last gradually until we get to init
+       lastAverage -= (lastAverage - initDistance) * LR;    //we decrease last against current  
+       currentAverage = 0;
+
+     }    
 }
 }
