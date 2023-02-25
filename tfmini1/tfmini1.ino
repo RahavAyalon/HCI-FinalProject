@@ -4,13 +4,20 @@ TFMini tfmini;
 
 
 int redPin = 11; //select the pin for the red LED
-int bluePin =10; // select the pin for the  blue LED
-int greenPin =9;// select the pin for the green LED 
+int bluePin =13; // select the pin for the  blue LED
+int greenPin =12;// select the pin for the green LED 
 int val;
+
+//float cyclicArray[32];
+float currentAverage = 0;
+float lastAverage = 0;
+int counter = 0;
+int changeCounter = 0;
+float thirtytwo = 32;
 
 SoftwareSerial SerialTFMini(2, 3);          //The only value that matters here is the first one, 2, Rx
  
-void getTFminiData(int* distance, int* strength)
+void getTFminiData(float* distance, float* strength)
 {
   static char i = 0;
   char j = 0;
@@ -58,38 +65,115 @@ void setup()
   Serial.println ("Initializing...");
   SerialTFMini.begin(TFMINI_BAUDRATE);    //Initialize the data rate for the SoftwareSerial port
   tfmini.begin(&SerialTFMini);            //Initialize the TF Mini sensor
+
+  float distance = 0;
+  float strength = 0;
+  for (int i = 31; 0 < i; i--) {           //we initilize reference average
+    getTFminiData(&distance, &strength);    //we read from sensor into distance
+    while (!distance)
+    {
+      getTFminiData(&distance, &strength);
+    }
+    lastAverage += (distance / thirtytwo);   
+//    lastAverage += float(distance >> five);    //LSH 5 = divide by 32  
+
+  }
+  analogWrite(redPin, 0);
+  analogWrite(bluePin, 0);
+  analogWrite(greenPin, 200);
+  delay(1000);
+  analogWrite(redPin, 0);
+  analogWrite(bluePin, 0);
+  analogWrite(greenPin, 0);
+
 }
  
 void loop()
 {
-  int distance = 0;
-  int strength = 0;
- 
-  getTFminiData(&distance, &strength);
+  float distance = 0;
+  float strength = 0;
+
+  getTFminiData(&distance, &strength);    //we read from sensor into distance
   while (!distance)
   {
     getTFminiData(&distance, &strength);
-    if (distance)
-    {
-      Serial.print(distance);
-      Serial.print("cm\t");
-      Serial.print("strength: ");
-      Serial.println(strength);
-    }
-    if (distance > 70)
-    {
-      analogWrite(redPin,200);
-      analogWrite(bluePin,0);
-      analogWrite(greenPin,0);
-      delay(10);
-    }
-    else
-    {
-      analogWrite(redPin,0);
-      analogWrite(bluePin,0);
-      analogWrite(greenPin,0);
-      
-    }
   }
-  delay(100);
+  
+//  Serial.println(counter);
+
+  Serial.println(distance);
+
+  
+//  Serial.print("cm\t");
+//  Serial.print("strength: ");
+//  Serial.println(strength);
+  
+//  for (int i = 31; 0 < i; i--) {        //we shift all vals in cyclicArray to the right
+//    cyclicArray[i] = cyclicArray[i-1];
+//  }
+    
+//  cyclicArray[0] = distance;          //insert distance measurment into first cell of cyclicArray
+//  currentAverage += float(distance >> five);    //LSH 5 = divide by 32  
+  currentAverage += distance / thirtytwo;    //divide by 32  
+
+
+  counter++;                              //update counter
+
+  if (counter == 32){
+      counter = 0;                     //we reset counter to refill cyclicArray once again
+
+      Serial.print("current ");
+      Serial.println(currentAverage,0);
+
+      Serial.print("last ");
+      Serial.println(lastAverage,0);
+
+  
+     if (lastAverage + 40 < currentAverage){   //there is a diviation above the tolorance
+      if (changeCounter == 4){
+        analogWrite(redPin,200);
+        analogWrite(bluePin,0);
+        analogWrite(greenPin,0);
+        delay(3000);
+
+        analogWrite(redPin,0);
+        analogWrite(bluePin,0);
+        analogWrite(greenPin,0);
+        
+        changeCounter = 0;                  //check if we want to reset or not
+        currentAverage = 0;
+      }
+      
+      else{                                //there is change but still uncertain
+        changeCounter++;
+        currentAverage = 0;
+
+      }
+     }
+     else if (7 < currentAverage and currentAverage < lastAverage - 10){
+           currentAverage = 0;
+      
+     }
+     
+     else if (currentAverage < 7){   //there is a diviation above the tolorance
+        analogWrite(redPin,0);
+        analogWrite(bluePin,200);
+        analogWrite(greenPin,0);
+        delay(3000);
+        analogWrite(redPin,0);
+        analogWrite(bluePin,0);
+        analogWrite(greenPin,0);
+
+//        changeCounter = 0;                  //check if we want to reset or not
+        currentAverage = 0;
+     }
+
+     
+     else{                                //change is within tolorance
+      lastAverage = currentAverage;
+      currentAverage = 0;
+      changeCounter = 0;
+     }
+      
+}
 }
