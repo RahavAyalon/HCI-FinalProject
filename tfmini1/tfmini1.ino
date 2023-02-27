@@ -82,7 +82,7 @@ void setup()
 
   establishContact();  // send a byte to establish contact until receiver responds
   delay(50);
-  
+  calculateInitDistance();
   if (Serial.available() > 0) {   //processing detected  
     techMode();                   //Enter technician mode
   }
@@ -97,7 +97,6 @@ void setup()
     }
     lastAverage += (distance / 32);   
   }
-  calculateInitDistance();
 
   analogWrite(redPin, 200);
   analogWrite(bluePin, 0);
@@ -113,11 +112,11 @@ void setup()
 void loop()
 {
 
-//    if (angle == 20) {
-//        analogWrite(redPin,200);
-//        analogWrite(bluePin,200);
-//        analogWrite(greenPin,0);
-//    }
+    if (angle == 20) {
+        analogWrite(redPin,200);
+        analogWrite(bluePin,200);
+        analogWrite(greenPin,0);
+    }
 
   
 
@@ -158,7 +157,6 @@ void loop()
       Serial.println(lastAverage,0);
       Serial.print("init ");
       Serial.println(initDistance,0);
-
  
 
       if (currentAverage < 10){   //something is very close to the sensor
@@ -219,53 +217,59 @@ void techMode(){
   analogWrite(bluePin,130);
   analogWrite(greenPin,130);
 
-  
+  int counter = 0;
   while(true){                //enter technician mode loop
-    getTFminiData(&distance, &strength);    //we read from sensor into distance
-//    Serial.print("Distance: ");
-//    Serial.print(distance);
-//    Serial.println("cm");
-//    Serial.print("Initial distance ");
-//    Serial.println(initDistance);
-//    Serial.println("cm");
-//    Serial.print("Strength: ");
-//    Serial.println(strength);
+    
 
 
     
-    if (Serial.available()){
-      Serial.println("cm");
+//    Serial.println("skrrr");
 
-      String inString = Serial.readString();
-      if (inString[0] == 'a') {
-         angle = (inString.substring(2)).toInt();
-  
-         delay(100);
-         EEPROM.write(0, angle);
-         delay(100);
-        }
-        
-      else if (inString[0] == 'h') {
-         height = (inString.substring(2)).toInt();
-  
-         delay(100);
-         EEPROM.write(1, height);
-         delay(100);
-      }    
-      
-      else if (inString[0] == 'e') {
-       emergencyPhone = (inString.substring(2)).toInt();
-       
+    String inString = Serial.readString();
+    if (inString[0] == 'a') {
+       angle = (inString.substring(2)).toInt();
+
        delay(100);
-       EEPROM.write(1, emergencyPhone);
+       EEPROM.write(0, angle);
        delay(100);
       }
       
-      else if (inString[0] == 'n') {
-        notificationType = inString.substring(2);
-      }          
+    else if (inString[0] == 'h') {
+       height = (inString.substring(2)).toInt();
+
+       delay(100);
+       EEPROM.write(1, height);
+       delay(100);
+    }    
+    
+    else if (inString[0] == 'e') {
+     emergencyPhone = (inString.substring(2)).toInt();
+     
+     delay(100);
+     EEPROM.write(1, emergencyPhone);
+     delay(100);
     }
+    
+    else if (inString[0] == 'n') {
+      notificationType = inString.substring(2);
+    }
+
+   else if (inString[0] == 'm'){
+      while (true){
+        getTFminiData(&distance, &strength);    //we read from sensor into distance     
+        Serial.print(" Distance: ");
+        Serial.print( distance);
+        Serial.println(" cm");
+        Serial.print(" Initial distance ");
+        Serial.print(initDistance);
+        Serial.println(" cm");
+        Serial.print(" Strength: ");
+        Serial.println(strength);
+
+ 
+   }
   }  
+}
 }
 
 void getVariables(){
