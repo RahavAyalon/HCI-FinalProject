@@ -84,7 +84,10 @@ void draw(){  //same as loop in arduino
   textFont(font);
 
   String buffer = "";
+  println("hi");
+
   while (port.available() > 0) {
+
     sonto = port.read();
     buffer += char(sonto);
     
@@ -101,22 +104,14 @@ void draw(){  //same as loop in arduino
 }
 
 void serialEvent(Serial port) {
-
     // read a byte from the serial port:
-
     int inByte = port.read();
-
     // if this is the first byte received, and it's an A, clear the serial
     // buffer and note that you've had first contact from the microcontroller.
-
     if (firstContact == false) {
- 
       if (inByte == 'A') {
-
         port.clear();          // clear the serial port buffer
-
         firstContact = true;     // you've had first contact from the microcontroller
-
         port.write('A');       // ask for more
 
       }
