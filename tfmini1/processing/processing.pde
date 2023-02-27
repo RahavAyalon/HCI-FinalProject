@@ -23,12 +23,8 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-<<<<<<< HEAD:tfmini1/processing/processing.pde
   port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
   
-=======
-  port = new Serial(this, "COM3", 9600);  //i have connected arduino to com3, it would be different in linux and mac os ????????????????????????????????????????
->>>>>>> 34c985bc9027000b88f8fab0ac99b0c8e82d456f:tfmini1/sketch_230220a.pde
 
   //lets add buton to empty window
   
@@ -38,7 +34,7 @@ void setup(){ //same as arduino program
   
 
   angleButton = cp5.addButton("angleButton")     
-    .setPosition(displayWidth * 5.25/8, displayHeight * 0.5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 5/8, displayHeight * 0.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
     .setFont(font)
     .setLabel("זווית החיישן")
@@ -46,7 +42,7 @@ void setup(){ //same as arduino program
   ;   
 
   heightButton = cp5.addButton("heightButton")     //"קליברציה אחורית" is the name of button
-    .setPosition(displayWidth * 5.25/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 5/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
     .setFont(font)
     .setLabel("גובה החיישן")
@@ -54,7 +50,7 @@ void setup(){ //same as arduino program
   ;
 
   emergencyDialSettingsButton = cp5.addButton("emergencyDialSettingsButton")     //"blue" is the name of button
-    .setPosition(displayWidth * 5.25/8, displayHeight * 3.5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 5/8, displayHeight * 3.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
     .setFont(font)
     .setLabel("הגדרות חיוג חירום")    
@@ -62,7 +58,7 @@ void setup(){ //same as arduino program
   ;
   
   notificationTypeButton = cp5.addButton("notificationTypeButton")     //"alloff" is the name of button
-    .setPosition(displayWidth * 5.25/8, displayHeight * 5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 5/8, displayHeight * 5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
     .setFont(font)
     .setLabel("סוג התראה")
@@ -70,7 +66,7 @@ void setup(){ //same as arduino program
   ;
   
     metricsButton = cp5.addButton("metricsButton")     //"alloff" is the name of button
-    .setPosition(displayWidth * 5.25/8, displayHeight * 6.5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 5/8, displayHeight * 6.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
     .setFont(font)
     .setLabel("קריאת מדדים")    
@@ -83,13 +79,11 @@ void setup(){ //same as arduino program
 
 void draw(){  //same as loop in arduino
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-<<<<<<< HEAD:tfmini1/processing/processing.pde
   //image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   fill(255, 255, 255);               //text color (r, g, b)
   textFont(font);
 
   String buffer = "";
-  println("hi");
 
   while (port.available() > 0) {
 
@@ -121,12 +115,6 @@ void serialEvent(Serial port) {
 
       }
     }
-=======
-  image(image, 90, 30, displayWidth / 2 , displayWidth / 2);
-  fill(255, 255, 255);               //text color (r, g, b)
-  textFont(font);
-  port.write("a " + "h" + "*");
->>>>>>> 34c985bc9027000b88f8fab0ac99b0c8e82d456f:tfmini1/sketch_230220a.pde
 }
 
 
@@ -137,15 +125,16 @@ void angleButton(){
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
+  
   angleTextfield = cp5.addTextfield("angleTextfield")
-    .setPosition(displayWidth * 5.25/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   angleEnterButton = cp5.addButton("angleEnterButton")    
-    .setPosition(displayWidth * 5.25/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
 }
@@ -172,14 +161,14 @@ void heightButton(){
   metricsButton.hide();
   
   heightTextfield = cp5.addTextfield("heightTextfield")
-    .setPosition(displayWidth * 5.25/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   heightEnterButton = cp5.addButton("heightEnterButton")    
-    .setPosition(displayWidth * 5.25/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
 }
@@ -205,16 +194,16 @@ void emergencyDialSettingsButton () {
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
-
+  
   emergencyDialSettingsTextfield = cp5.addTextfield("emergencyDialSettingsTextfield")
-    .setPosition(displayWidth * 5.25/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   emergencyDialSettingsEnterButton = cp5.addButton("emergencyDialSettingsEnterButton")    
-    .setPosition(displayWidth * 5.25/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
 }
@@ -285,16 +274,16 @@ void metricsButton(){
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
- 
+  
   metricsTextfield = cp5.addTextfield("metricsTextfield")
-    .setPosition(displayWidth * 5.25/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   metricsEnterButton = cp5.addButton("metricsEnterButton")    
-    .setPosition(displayWidth * 5.25/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
    
