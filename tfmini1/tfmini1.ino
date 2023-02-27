@@ -132,11 +132,11 @@ void loop()
   
 //  sendData(distance, strength);
 //  Serial.println(counter);
-  Serial.print("distance: ");
-  Serial.println(distance);
-  Serial.print("cm\t");
-  Serial.print("strength: ");
-  Serial.println(strength);
+//  Serial.print("distance: ");
+//  Serial.println(distance);
+//  Serial.print("cm\t");
+//  Serial.print("strength: ");
+//  Serial.println(strength);
   
 //  for (int i = 31; 0 < i; i--) {        //we shift all vals in cyclicArray to the right
 //    cyclicArray[i] = cyclicArray[i-1];
@@ -222,44 +222,49 @@ void techMode(){
   
   while(true){                //enter technician mode loop
     getTFminiData(&distance, &strength);    //we read from sensor into distance
-    Serial.print("Distance: ");
-    Serial.print(distance);
-    Serial.println("cm");
-    Serial.print("Initial distance ");
-    Serial.println(initDistance);
-    Serial.println("cm");
-    Serial.print("Strength: ");
-    Serial.println(strength);
+//    Serial.print("Distance: ");
+//    Serial.print(distance);
+//    Serial.println("cm");
+//    Serial.print("Initial distance ");
+//    Serial.println(initDistance);
+//    Serial.println("cm");
+//    Serial.print("Strength: ");
+//    Serial.println(strength);
+
+
     
+    if (Serial.available()){
+      Serial.println("cm");
 
-    String inString = Serial.readString();
-    if (inString[0] == 'a') {
-       angle = (inString.substring(2)).toInt();
-
+      String inString = Serial.readString();
+      if (inString[0] == 'a') {
+         angle = (inString.substring(2)).toInt();
+  
+         delay(100);
+         EEPROM.write(0, angle);
+         delay(100);
+        }
+        
+      else if (inString[0] == 'h') {
+         height = (inString.substring(2)).toInt();
+  
+         delay(100);
+         EEPROM.write(1, height);
+         delay(100);
+      }    
+      
+      else if (inString[0] == 'e') {
+       emergencyPhone = (inString.substring(2)).toInt();
+       
        delay(100);
-       EEPROM.write(0, angle);
+       EEPROM.write(1, emergencyPhone);
        delay(100);
       }
       
-    else if (inString[0] == 'h') {
-       height = (inString.substring(2)).toInt();
-
-       delay(100);
-       EEPROM.write(1, height);
-       delay(100);
-    }    
-    
-    else if (inString[0] == 'e') {
-     emergencyPhone = (inString.substring(2)).toInt();
-     
-     delay(100);
-     EEPROM.write(1, emergencyPhone);
-     delay(100);
+      else if (inString[0] == 'n') {
+        notificationType = inString.substring(2);
+      }          
     }
-    
-    else if (inString[0] == 'n') {
-      notificationType = inString.substring(2);
-    }          
   }  
 }
 
