@@ -1,23 +1,27 @@
 #include <SoftwareSerial.h>
+#include <EEPROM.h>
 #include "TFMini.h"
 TFMini tfmini;
-
 
 int redPin = 11; //select the pin for the red LED
 int bluePin =13; // select the pin for the  blue LED
 int greenPin =12;// select the pin for the green LED 
 int val;
 
-//float cyclicArray[32];
 float currentAverage = 0;
 float lastAverage = 0;
 int counter = 0;
 int changeCounter = 0;                //how many times the 
-float LR = 0.1;
+float LR = 0.1;                       //learning rate
+float distance = 0;
+float strength = 0;
 
-float angle = 45;          //angel (in degrees) of the sensor
-float hight = 61;          //hight (in cm) of the sensor
-float initDistance;   //expected diagonal distance based on the angle and hight 
+String notificationType = "vibration";
+int emergencyPhone = 0;
+float angle = 45;           //angel (in degrees) of the sensor
+float height = 61;          //height (in cm) of the sensor
+
+float initDistance;   //expected diagonal distance based on the angle and height
 
 SoftwareSerial SerialTFMini(2, 3);          //The only value that matters here is the first one, 2, Rx
  
@@ -61,7 +65,7 @@ void getTFminiData(float* distance, float* strength)
 void calculateInitDistance()
 {
   float angle_rad = (angle * PI) / 180;       //convert degrees to radians
-  initDistance = hight * (1 / cos(angle_rad));
+  initDistance = height * (1 / cos(angle_rad));
 }
  
 void setup()
@@ -70,13 +74,21 @@ void setup()
   pinMode(bluePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   Serial.begin(115200);       //Initialize hardware serial port (serial debug port)
+
   while (!Serial);            // wait for serial port to connect. Needed for native USB port only
   Serial.println ("Initializing...");
   SerialTFMini.begin(TFMINI_BAUDRATE);    //Initialize the data rate for the SoftwareSerial port
   tfmini.begin(&SerialTFMini);            //Initialize the TF Mini sensor
 
-  float distance = 0;
-  float strength = 0;
+  establishContact();  // send a byte to establish contact until receiver responds
+  delay(50);
+  
+  if (Serial.available() > 0) {   //processing detected  
+    techMode();                   //Enter technician mode
+  }
+  getVariables();                 //fetch variables from EEPROM  
+  
+  
   for (int i = 31; 0 < i; i--) {           //we initilize reference average
     getTFminiData(&distance, &strength);    //we read from sensor into distance
     while (!distance)
@@ -85,20 +97,30 @@ void setup()
     }
     lastAverage += (distance / 32);   
   }
-
   calculateInitDistance();
 
-  analogWrite(redPin, 0);
+  analogWrite(redPin, 200);
   analogWrite(bluePin, 0);
-  analogWrite(greenPin, 200);
+  analogWrite(greenPin, 0);
   delay(1000);
   analogWrite(redPin, 0);
   analogWrite(bluePin, 0);
   analogWrite(greenPin, 0);
 }
- 
+
+
+
 void loop()
 {
+
+//    if (angle == 20) {
+//        analogWrite(redPin,200);
+//        analogWrite(bluePin,200);
+//        analogWrite(greenPin,0);
+//    }
+
+  
+
   float distance = 0;
   float strength = 0;
 
@@ -108,13 +130,13 @@ void loop()
     getTFminiData(&distance, &strength);
   }
   
+//  sendData(distance, strength);
 //  Serial.println(counter);
+  Serial.print("distance: ");
   Serial.println(distance);
-
-  
-//  Serial.print("cm\t");
-//  Serial.print("strength: ");
-//  Serial.println(strength);
+  Serial.print("cm\t");
+  Serial.print("strength: ");
+  Serial.println(strength);
   
 //  for (int i = 31; 0 < i; i--) {        //we shift all vals in cyclicArray to the right
 //    cyclicArray[i] = cyclicArray[i-1];
@@ -162,17 +184,14 @@ void loop()
           analogWrite(greenPin,0);
           
           changeCounter = 0;                  //check if we want to reset or not
-//          currentAverage = 0;
         }
         else{                                //there is change but still uncertain
           changeCounter++;
-//          currentAverage = 0;
         }
         
        }
       else{                                //change is within tolorance - we increase last
         lastAverage += (currentAverage - lastAverage) * LR;
-//        currentAverage = 0;
         changeCounter = 0;
       }
      currentAverage = 0;
@@ -183,5 +202,91 @@ void loop()
        currentAverage = 0;
 
      }    
+  }
 }
+
+
+void establishContact() {
+//  while (Serial.available() <= 0) {
+    delay(100);
+    Serial.print('A');   // send a capital A
+    delay(300);
+
 }
+
+void techMode(){
+  analogWrite(redPin,100);    //confirmation light
+  analogWrite(bluePin,130);
+  analogWrite(greenPin,130);
+
+  
+  while(true){                //enter technician mode loop
+    getTFminiData(&distance, &strength);    //we read from sensor into distance
+    Serial.print("Distance: ");
+    Serial.print(distance);
+    Serial.println("cm");
+    Serial.print("Initial distance ");
+    Serial.println(initDistance);
+    Serial.println("cm");
+    Serial.print("Strength: ");
+    Serial.println(strength);
+    
+
+    String inString = Serial.readString();
+    if (inString[0] == 'a') {
+       angle = (inString.substring(2)).toInt();
+
+       delay(100);
+       EEPROM.write(0, angle);
+       delay(100);
+      }
+      
+    else if (inString[0] == 'h') {
+       height = (inString.substring(2)).toInt();
+
+       delay(100);
+       EEPROM.write(1, height);
+       delay(100);
+    }    
+    
+    else if (inString[0] == 'e') {
+     emergencyPhone = (inString.substring(2)).toInt();
+     
+     delay(100);
+     EEPROM.write(1, emergencyPhone);
+     delay(100);
+    }
+    
+    else if (inString[0] == 'n') {
+      notificationType = inString.substring(2);
+    }          
+  }  
+}
+
+void getVariables(){
+  //get global variables values from EEPROM
+  delay(50);
+  angle = EEPROM.read(0);
+  delay(50);
+
+  delay(50);
+  height = EEPROM.read(1);
+  delay(50);
+
+  delay(50);
+  emergencyPhone = EEPROM.read(2);
+  delay(50);
+
+  delay(50);
+  notificationType = EEPROM.read(3);
+  delay(50);
+
+  analogWrite(redPin,0);    //confirmation light
+  analogWrite(bluePin,0);
+  analogWrite(greenPin,200);
+  delay(300);
+  analogWrite(redPin,0);    //confirmation light OFF
+  analogWrite(bluePin,0);
+  analogWrite(greenPin,0);
+}
+  

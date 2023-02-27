@@ -9,6 +9,12 @@ PImage image;
 Textfield angleTextfield, heightTextfield, emergencyDialSettingsTextfield, notificationTypeTextfield, metricsTextfield;
 Button angleButton, angleEnterButton, heightButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
 metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, metricsEnterButton;
+String str = null;
+float myVal;
+int sonto;
+
+boolean firstContact = false;        // Whether we've heard from the microcontroller
+
 
 void setup(){ //same as arduino program
   println("windowWidth: " + displayWidth);
@@ -17,13 +23,15 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  port = new Serial(this, "COM3", 9600);  //i have connected arduino to com3, it would be different in linux and mac os
+  port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  
 
   //lets add buton to empty window
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
   image = loadImage("C:\\Users\\rahav\\Documents\\sketch_230220a\\data\\lior.jpg"); // Load the image
+  
 
   angleButton = cp5.addButton("angleButton")     
     .setPosition(displayWidth * 5/8, displayHeight * 0.5/8)  //x and y coordinates of upper left corner of button
@@ -64,13 +72,55 @@ void setup(){ //same as arduino program
     .setLabel("קריאת מדדים")    
     .setColorBackground(color(90, 154, 215))
   ;
+  
+  //port.write("a *");
+
 }
 
 void draw(){  //same as loop in arduino
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  //image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   fill(255, 255, 255);               //text color (r, g, b)
   textFont(font);
+
+  String buffer = "";
+  while (port.available() > 0) {
+    sonto = port.read();
+    buffer += char(sonto);
+    
+    
+    //if (sonto != null) {
+    //  background(0);
+    //  myVal = float(str);
+    //  //println(myVal);
+    //}
+  }
+  if (buffer.length() != 0) {
+      println(buffer);
+  }
+}
+
+void serialEvent(Serial port) {
+
+    // read a byte from the serial port:
+
+    int inByte = port.read();
+
+    // if this is the first byte received, and it's an A, clear the serial
+    // buffer and note that you've had first contact from the microcontroller.
+
+    if (firstContact == false) {
+ 
+      if (inByte == 'A') {
+
+        port.clear();          // clear the serial port buffer
+
+        firstContact = true;     // you've had first contact from the microcontroller
+
+        port.write('A');       // ask for more
+
+      }
+    }
 }
 
 
