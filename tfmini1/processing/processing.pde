@@ -24,13 +24,20 @@ void setup(){ //same as arduino program
   printArray(Serial.list());   //prints all available serial ports
   
   port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
-  
+  if (port.available() > 0) {
+  }
 
   //lets add buton to empty window
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
   image = loadImage("C:\\Users\\rahav\\Documents\\sketch_230220a\\data\\lior.jpg"); // Load the image
+
+  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  //image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  fill(255, 255, 255);               //text color (r, g, b)
+  textFont(font);
+  frameRate(10);
   
 
   angleButton = cp5.addButton("angleButton")     
@@ -78,17 +85,16 @@ void setup(){ //same as arduino program
 }
 
 void draw(){  //same as loop in arduino
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  //image(image, 0, 30, displayWidth / 2, displayWidth / 2);
-  fill(255, 255, 255);               //text color (r, g, b)
-  textFont(font);
+  
 
   String buffer = "";
 
   while (port.available() > 0) {
+    mySerialEvent();
 
-    sonto = port.read();
-    buffer += char(sonto);
+
+//    sonto = port.read();
+//    buffer += char(sonto);
     
     
     //if (sonto != null) {
@@ -97,12 +103,12 @@ void draw(){  //same as loop in arduino
     //  //println(myVal);
     //}
   }
-  if (buffer.length() != 0) {
-      println(buffer);
-  }
+  //if (buffer.length() != 0) {
+  //    println(buffer);
+  //}
 }
 
-void serialEvent(Serial port) {
+void mySerialEvent() {
     // read a byte from the serial port:
     int inByte = port.read();
     // if this is the first byte received, and it's an A, clear the serial
@@ -112,9 +118,25 @@ void serialEvent(Serial port) {
         port.clear();          // clear the serial port buffer
         firstContact = true;     // you've had first contact from the microcontroller
         port.write('A');       // ask for more
-
       }
     }
+    else{
+      //println("hi");
+      String buffer = "";
+    
+      while (port.available() > 0) {
+    
+        sonto = port.read();
+        buffer += char(sonto);
+
+      }
+      if (buffer.length() != 0) {
+          println(buffer);
+          background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+
+          text(buffer, 10 , 100);          
+      }    
+}
 }
 
 
