@@ -13,9 +13,6 @@ String str = null;
 float myVal;
 int sonto;
 
-boolean firstContact = false;        // Whether we've heard from the microcontroller
-
-
 void setup(){ //same as arduino program
   println("windowWidth: " + displayWidth);
   println("windowHeight: " + displayHeight);
@@ -23,15 +20,13 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
-  
+  port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
 
   //lets add buton to empty window
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
   image = loadImage("C:\\Users\\rahav\\Documents\\sketch_230220a\\data\\lior.jpg"); // Load the image
-  
 
   angleButton = cp5.addButton("angleButton")     
     .setPosition(displayWidth * 5/8, displayHeight * 0.5/8)  //x and y coordinates of upper left corner of button
@@ -72,21 +67,15 @@ void setup(){ //same as arduino program
     .setLabel("קריאת מדדים")    
     .setColorBackground(color(90, 154, 215))
   ;
-  
-  //port.write("a *");
-
 }
 
 void draw(){  //same as loop in arduino
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  //image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   fill(255, 255, 255);               //text color (r, g, b)
   textFont(font);
-
   String buffer = "";
-
   while (port.available() > 0) {
-
     sonto = port.read();
     buffer += char(sonto);
     
@@ -102,21 +91,6 @@ void draw(){  //same as loop in arduino
   }
 }
 
-void serialEvent(Serial port) {
-    // read a byte from the serial port:
-    int inByte = port.read();
-    // if this is the first byte received, and it's an A, clear the serial
-    // buffer and note that you've had first contact from the microcontroller.
-    if (firstContact == false) {
-      if (inByte == 'A') {
-        port.clear();          // clear the serial port buffer
-        firstContact = true;     // you've had first contact from the microcontroller
-        port.write('A');       // ask for more
-
-      }
-    }
-}
-
 
 void angleButton(){
   
@@ -125,16 +99,16 @@ void angleButton(){
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
-
+  
   angleTextfield = cp5.addTextfield("angleTextfield")
-    .setPosition(displayWidth * 5/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   angleEnterButton = cp5.addButton("angleEnterButton")    
-    .setPosition(displayWidth * 5/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
 }
@@ -161,14 +135,14 @@ void heightButton(){
   metricsButton.hide();
   
   heightTextfield = cp5.addTextfield("heightTextfield")
-    .setPosition(displayWidth * 5/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   heightEnterButton = cp5.addButton("heightEnterButton")    
-    .setPosition(displayWidth * 5/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
 }
@@ -196,14 +170,14 @@ void emergencyDialSettingsButton () {
   metricsButton.hide();
   
   emergencyDialSettingsTextfield = cp5.addTextfield("emergencyDialSettingsTextfield")
-    .setPosition(displayWidth * 5/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   emergencyDialSettingsEnterButton = cp5.addButton("emergencyDialSettingsEnterButton")    
-    .setPosition(displayWidth * 5/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
 }
@@ -265,8 +239,6 @@ void notificationTypeEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   
-  
-  
   port.write("n " + notificationTypeTextfield.getText() + "*");
 }
 
@@ -276,22 +248,16 @@ void metricsButton(){
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
-    
-  emergencyDialSettingsEnterButton = cp5.addButton("emergencyDialSettingsEnterButton")    
-    .setPosition(displayWidth * 5/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
-    .setFont(font)
-    .setLabel("");
   
   metricsTextfield = cp5.addTextfield("metricsTextfield")
-     .setPosition(displayWidth * 5/8, displayHeight * 0.5/8)
-    .setSize(displayWidth / 5, displayWidth / 14)
+    .setPosition(500, 50)
+    .setSize(150, 70)
     .setFont(font)
     .setLabel("");
     
   metricsEnterButton = cp5.addButton("metricsEnterButton")    
-    .setPosition(displayWidth * 5/8, displayHeight * 2/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 5, displayWidth / 14)      //(width, height)
+    .setPosition(500, 150)  //x and y coordinates of upper left corner of button
+    .setSize(150, 70)      //(width, height)
     .setColorBackground(color(90, 154, 215))
     .setLabel("Enter");
    
