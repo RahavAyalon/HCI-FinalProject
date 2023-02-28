@@ -23,9 +23,9 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  //port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
-  //if (port.available() > 0) {
-  //}
+  port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  if (port.available() > 0) {
+  }
 
   //lets add buton to empty window
   
@@ -94,8 +94,8 @@ void draw(){  //same as loop in arduino
 
   String buffer = "";
 
-  //while (port.available() > 0) {
-  //  mySerialEvent();
+  while (port.available() > 0) {
+    mySerialEvent();
 
 
 //    sonto = port.read();
