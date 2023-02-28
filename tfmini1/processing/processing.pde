@@ -18,19 +18,18 @@ boolean firstContact = false;        // Whether we've heard from the microcontro
 
  //<>//
 void setup(){
-  //size(1920, 1080);                  // Window size, (width, height)
   fullScreen();
   surface.setLocation(0,0);
   printArray(Serial.list());         // Print all available serial ports
   
-  //port = new Serial(this, "COM7", 115200);
-  //if (port.available() > 0) {
-  //}
+  port = new Serial(this, "COM7", 115200);
+  if (port.available() > 0) {
+  }
   
   cp5 = new ControlP5(this);
   font = createFont("david", 38);     // Custom fonts for buttons and title
-  //font = createFont("felix007 Medium", 38);     // Custom fonts for buttons and title
-  image = loadImage("./lior.jpg");         // Load the image
+  //font = createFont("felix007 Medium", 36);     // Custom fonts for buttons and title
+  image = loadImage("./data//lior.jpg");         // Load the image
 
   
   background(223, 130 , 68); 
@@ -82,9 +81,9 @@ void setup(){
 }
 
 void draw(){  
-  //while (port.available() > 0) {
-  //  mySerialEvent();
-  //}
+  while (port.available() > 0) {
+    mySerialEvent();
+  }
 }
 
 void mySerialEvent() {
