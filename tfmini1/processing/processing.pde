@@ -13,7 +13,7 @@ String str = null;
 float myVal;
 int sonto;
 boolean isReadingSensor = false;
-boolean firstContact = false;        // Whether we've heard from the microcontroller
+boolean firstContact = false;        // Whether we've heard from the microcontroller //<>//
 
 
 void setup(){ //same as arduino program
@@ -23,9 +23,9 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
-  if (port.available() > 0) {
-  }
+  //port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  //if (port.available() > 0) {
+  //}
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
@@ -92,9 +92,9 @@ void draw(){  //same as loop in arduino
 
   String buffer = "";
 
-  while (port.available() > 0) {
-    mySerialEvent();
-  }
+  //while (port.available() > 0) {
+  //  mySerialEvent();
+  //}
 
 //    sonto = port.read();
 //    buffer += char(sonto);
@@ -122,7 +122,6 @@ void mySerialEvent() {
       }
     }
     else{
-      //println("hi");
       String buffer = "";
     
       while (port.available() > 0) {
@@ -138,19 +137,18 @@ void mySerialEvent() {
             if ((list[i].length()) > 0 && isReadingSensor == true) {
               print(list[i]);
               if (list[i].charAt(0) == 'D') {
-              text(list[i].substring(1), displayWidth * 1.8/8 , displayHeight * 3.5/8);  
+                text(list[i].substring(1), displayWidth * 1.8/8 , displayHeight * 3.5/8);  
+              }
+              else if (list[i].charAt(0) == 'S') {
+                text(list[i].substring(1), displayWidth * 3.8/8 , displayHeight * 3.5/8);  
+              }
+              else if (list[i].charAt(0) == 'I') {
+                text(list[i].substring(1), displayWidth * 5.8/8 , displayHeight * 3.5/8);  
+              }
             }
-            else if (list[i].charAt(0) == 'S') {
-              text(list[i].substring(1), displayWidth * 3.8/8 , displayHeight * 3.5/8);  
-            }
-            else if (list[i].charAt(0) == 'I') {
-              text(list[i].substring(1), displayWidth * 5.8/8 , displayHeight * 3.5/8);  
-            }
-            }
-            
           }       
       }    
-}
+  }
 }
 
 

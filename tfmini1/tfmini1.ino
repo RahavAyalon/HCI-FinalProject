@@ -202,6 +202,9 @@ void techMode(){
         counter++;
       }
     }
+    else if (inString[0] == 's'){
+      break;
+    }
   }
 } 
    
