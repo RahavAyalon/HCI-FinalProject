@@ -128,7 +128,7 @@ void loop()
 
           }
             
-          else{                              //LED
+          else if (notificationType == 2){                             //LED
           analogWrite(redPin,200);
           analogWrite(bluePin,0);
           analogWrite(greenPin,0);
