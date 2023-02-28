@@ -31,6 +31,7 @@ void setup()
   pinMode(redPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
   pinMode(greenPin, OUTPUT);
+  pinMode(4, OUTPUT);
   Serial.begin(115200);       //Initialize hardware serial port (serial debug port)
 
   while (!Serial);            // wait for serial port to connect. Needed for native USB port only
@@ -116,11 +117,12 @@ void loop()
    
      else if (lastAverage < currentAverage){
        if (lastAverage + 30 < currentAverage){   //there is a diviation above the tolorance
+        Serial.println(notificationType);
         if (changeCounter == 4){
           if (notificationType == 0){       //vibrating motor
-            analogWrite(4 ,200);
+            digitalWrite(4 ,HIGH);
             delay(3000);
-            analogWrite(4 ,0);
+            digitalWrite(4 ,0);
           }
           else if (notificationType == 1){   //Buzzer
               
