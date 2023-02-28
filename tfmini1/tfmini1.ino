@@ -194,8 +194,8 @@ void techMode(){
         getTFminiData(&distance, &strength);    //we read from sensor into distance   
         if (counter == 11520){
           Serial.println(" D" + String(distance));
-          Serial.println("S" + String(strength));
-          Serial.println("I" + String(initDistance));
+          Serial.println(" S" + String(strength));
+          Serial.println(" I" + String(initDistance));
           
           counter = 0;
         }
