@@ -23,7 +23,7 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
   if (port.available() > 0) {
   }
   
@@ -132,10 +132,32 @@ void mySerialEvent() {
 
       }
       if (buffer.length() != 0) {
-          println(buffer);
-          background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+          String[] list = split(buffer, '\n');
+          //String distance = list[0];          
+          //String strength = list[1];
+          //String initialDistance = list[2];
 
-          text(buffer, 10 , 100);          
+          
+          //println(list[0] + list[1] + list[2]);
+          //println(distance.substring(1));
+          //println(strength.substring(1));
+          //println(initialDistance.substring(1));
+          background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+          for (int i = 0; i < list.length; i++) {
+            if ((list[i].length()) > 0) {
+              print(list[i]);
+              if (list[i].charAt(0) == 'D') {
+              text(list[i].substring(1), 10 , 100);  
+            }
+            else if (list[i].charAt(0) == 'S') {
+              text(list[i].substring(1), 200 , 100);  
+            }
+            else if (list[i].charAt(0) == 'I') {
+              text(list[i].substring(1), 400 , 100);  
+            }
+            }
+            
+          }       
       }    
 }
 }
@@ -329,25 +351,25 @@ void metricsButton(){
   saveButton.hide();
  
   
-  metricsTextfield = cp5.addTextfield("metricsTextfield")
-     .setPosition(displayWidth * 3.15/8, displayHeight * 4.5/8)
-    .setSize(displayWidth / 5, displayWidth / 16)
-    .setFont(font)
-    .setLabel("");
+  //metricsTextfield = cp5.addTextfield("metricsTextfield")
+  //   .setPosition(displayWidth * 3.15/8, displayHeight * 4.5/8)
+  //  .setSize(displayWidth / 5, displayWidth / 16)
+  //  .setFont(font)
+  //  .setLabel("");
     
   metricsEnterButton = cp5.addButton("metricsEnterButton")    
     .setPosition(displayWidth * 1.15/8, displayHeight * 4.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
-    .setLabel("שמירה");
-    port.write("m " + metricsTextfield.getText() + "*");
+    .setLabel("חזרה לתפריט הראשי");
+    port.write("m *");
 }
 
 void metricsEnterButton() {
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
   
-  metricsTextfield.hide();
+  //metricsTextfield.hide();
   metricsEnterButton.hide();
   
   angleButton.show();
