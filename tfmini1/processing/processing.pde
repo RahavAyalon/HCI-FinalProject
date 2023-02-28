@@ -37,7 +37,7 @@ void setup(){ //same as arduino program
   //image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   fill(255, 255, 255);               //text color (r, g, b)
   textFont(font);
-  frameRate(10);
+  //frameRate(10);
   
 
   angleButton = cp5.addButton("angleButton")     
@@ -343,7 +343,13 @@ void metricsButton(){
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
+<<<<<<< Updated upstream
     .setLabel("שמירה");
+=======
+    .setLabel("Enter");
+    port.write("m " + metricsTextfield.getText() + "*");
+
+>>>>>>> Stashed changes
    
 }
 
@@ -360,5 +366,5 @@ void metricsEnterButton() {
   metricsButton.show();
   saveButton.show();
   
-  port.write("m " + metricsTextfield.getText() + "*");
+  //port.write("m " + metricsTextfield.getText() + "*");
 }
