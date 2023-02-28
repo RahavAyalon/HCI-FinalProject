@@ -26,8 +26,6 @@ void setup(){ //same as arduino program
   port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
   if (port.available() > 0) {
   }
-
-  //lets add buton to empty window
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
@@ -96,11 +94,10 @@ void draw(){  //same as loop in arduino
 
   while (port.available() > 0) {
     mySerialEvent();
-
+  }
 
 //    sonto = port.read();
 //    buffer += char(sonto);
-  //}
     
     //if (sonto != null) {
     //  background(0);
@@ -343,14 +340,8 @@ void metricsButton(){
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
-<<<<<<< Updated upstream
     .setLabel("שמירה");
-=======
-    .setLabel("Enter");
     port.write("m " + metricsTextfield.getText() + "*");
-
->>>>>>> Stashed changes
-   
 }
 
 void metricsEnterButton() {
@@ -367,4 +358,11 @@ void metricsEnterButton() {
   saveButton.show();
   
   //port.write("m " + metricsTextfield.getText() + "*");
+}
+
+
+void saveButton(){
+  
+    port.write("s exit*");
+    exit();
 }

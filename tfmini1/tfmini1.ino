@@ -136,11 +136,6 @@ void loop()
 //  Serial.print("cm\t");
 //  Serial.print("strength: ");
 //  Serial.println(strength);
-
-    Serial.println(
-      " Distance: " + String(distance) + " cm \n" + 
-      "Initial Distance: " + String(initDistance) + " cm \n" +
-      "Strength: " + String(strength) + " \n");
   
 //  for (int i = 31; 0 < i; i--) {        //we shift all vals in cyclicArray to the right
 //    cyclicArray[i] = cyclicArray[i-1];
@@ -162,11 +157,6 @@ void loop()
       Serial.println(lastAverage,0);
       Serial.print("init ");
       Serial.println(initDistance,0);
-
-//      Serial.println(
-//        " Distance: " + String(distance) + " cm \n" + 
-//        "Initial Distance: " + String(initDistance) + " cm \n" +
-//        "Strength: " + String(strength) + " cm \n");
  
 
       if (currentAverage < 10){   //something is very close to the sensor
@@ -265,37 +255,23 @@ void techMode(){
     }
 
    else if (inString[0] == 'm'){
-      int counter = 0;
       while (true){
-        while (!Serial);            // wait for serial port to connect. Needed for native USB port only
-        getTFminiData(&distance, &strength);    //we read from sensor into distance   
-        Serial.println(
-        " Distance: " + String(distance) + " cm \n" + 
-        "Initial Distance: " + String(initDistance) + " cm \n" +
-        "Strength: " + String(strength) + "\n");
-          
-//        Serial.print(" Distance: ");
-//        Serial.print( distance);
-//        Serial.println(" cm");
-//        Serial.print(" Initial distance ");
-//        Serial.print(initDistance);
-//        Serial.println(" cm");
-//        Serial.print(" Strength: ");
-//        Serial.println(strength);
-        counter = 0;
-        delay(1000);
-        }
-        counter++;
-//        String x = Serial.readString();
-//        if (inString[0] == 'm'){
-//          break;
-//        }
-      }
-
- 
-      }
+        getTFminiData(&distance, &strength);    //we read from sensor into distance     
+        Serial.print(" Distance: ");
+        Serial.print( distance);
+        Serial.println(" cm");
+        Serial.print(" Initial distance ");
+        Serial.print(initDistance);
+        Serial.println(" cm");
+        Serial.print(" Strength: ");
+        Serial.println(strength);
+    }  
+   }
+   else if (inString[0] == 's') {
+      break;
   }  
-
+}
+}
 
 void getVariables(){
   //get global variables values from EEPROM
