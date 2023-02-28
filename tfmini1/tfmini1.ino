@@ -12,11 +12,12 @@ float currentAverage = 0;
 float lastAverage = 0;
 int counter = 0;
 int changeCounter = 0;                //how many times the 
-float LR = 0.1;                       //learning rate
+float DLR = 0.2;                       //learning rate
+float ULR = 0.05;
 float distance = 0;
 float strength = 0;
 
-String notificationType = "vibration";
+int notificationType = 1;
 int emergencyPhone = 0;
 float angle = 45;           //angel (in degrees) of the sensor
 float height = 61;          //height (in cm) of the sensor
@@ -39,12 +40,12 @@ void setup()
 
   establishContact();  // send a byte to establish contact until receiver responds
   delay(50);
-  calculateInitDistance();
   if (Serial.available() > 0) {   //processing detected  
     techMode();                   //Enter technician mode
   }
   getVariables();                 //fetch variables from EEPROM  
-  
+  calculateInitDistance();
+
   
   for (int i = 31; 0 < i; i--) {           //we initilize reference average
     getTFminiData(&distance, &strength);    //we read from sensor into distance
@@ -52,7 +53,7 @@ void setup()
     {
       getTFminiData(&distance, &strength);
     }
-    lastAverage += (distance / 32);   
+    lastAverage += (distance / 25);   
   }
 
   analogWrite(redPin, 200);
@@ -69,11 +70,11 @@ void setup()
 void loop()
 {
 
-    if (angle == 20) {
-        analogWrite(redPin,200);
-        analogWrite(bluePin,200);
-        analogWrite(greenPin,0);
-    }
+//    if (height == 57) {
+//        analogWrite(redPin,200);
+//        analogWrite(bluePin,200);
+//        analogWrite(greenPin,0);
+//    }
 
   
 
@@ -87,15 +88,19 @@ void loop()
   }
 
 
-    Serial.println(
-      " Distance: " + String(distance) + " cm \n" + 
-      "Initial Distance: " + String(initDistance) + " cm \n" +
-      "Strength: " + String(strength) + " \n");
+//    Serial.println(
+//      " Distance: " + String(distance) + " cm \n" + 
+//      "Initial Distance: " + String(initDistance) + " cm \n" +
+//      "Strength: " + String(strength) + " \n");
 
-  currentAverage += distance / 32;     
+  currentAverage += distance / 25;     
   counter++;                          //update counter
        
-  if (counter == 32){
+  if (counter == 25){
+    Serial.println(
+      " current: " + String(currentAverage) + " cm \n" + 
+      "last: " + String(lastAverage) + " cm \n");
+    
       counter = 0;                     //we reset counter to refill cyclicArray once again
       
       if (currentAverage < 10){   //something is very close to the sensor
@@ -110,8 +115,20 @@ void loop()
    }
    
      else if (lastAverage < currentAverage){
-       if (lastAverage + 40 < currentAverage){   //there is a diviation above the tolorance
+       if (lastAverage + 30 < currentAverage){   //there is a diviation above the tolorance
         if (changeCounter == 4){
+          if (notificationType == 0){       //vibrating motor
+            analogWrite(4 ,200);
+            delay(3000);
+            analogWrite(4 ,0);
+          }
+          else if (notificationType == 1){   //Buzzer
+              
+
+
+          }
+            
+          else{                              //LED
           analogWrite(redPin,200);
           analogWrite(bluePin,0);
           analogWrite(greenPin,0);
@@ -122,23 +139,24 @@ void loop()
           
           changeCounter = 0;                  //check if we want to reset or not
         }
+        }
         else{                                //there is change but still uncertain
           changeCounter++;
         }
-        
        }
       else{                                //change is within tolorance - we increase last
-        lastAverage += (currentAverage - lastAverage) * LR;
+        lastAverage += (currentAverage - lastAverage) * ULR;
         changeCounter = 0;
       }
      currentAverage = 0;
      }
 
      else if(lastAverage > currentAverage and lastAverage > initDistance - 1){      //we decrease last gradually until we get to init
-       lastAverage -= (lastAverage - initDistance) * LR;    //we decrease last against current  
-       currentAverage = 0;
+       lastAverage -= (lastAverage - currentAverage) * DLR;    //we decrease last against current  
 
-     }    
+     }
+    currentAverage = 0;
+    
   }
 }
 
@@ -179,12 +197,15 @@ void techMode(){
      emergencyPhone = (inString.substring(2)).toInt();
      
      delay(100);
-     EEPROM.write(1, emergencyPhone);
+     EEPROM.write(2, emergencyPhone);
      delay(100);
     }
     
     else if (inString[0] == 'n') {
-      notificationType = inString.substring(2);
+      notificationType = (inString.substring(2)).toInt();
+      delay(100);
+      EEPROM.write(3, notificationType);
+      delay(100);
     }
 
    else if (inString[0] == 'm'){
@@ -194,8 +215,8 @@ void techMode(){
         getTFminiData(&distance, &strength);    //we read from sensor into distance   
         if (counter == 11520){
           Serial.println(" D" + String(distance));
-          Serial.println(" S" + String(strength));
-          Serial.println(" I" + String(initDistance));
+          Serial.println("S" + String(strength));
+          Serial.println("I" + String(initDistance));
           
           counter = 0;
         }
