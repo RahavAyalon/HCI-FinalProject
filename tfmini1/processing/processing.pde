@@ -1,152 +1,136 @@
-import controlP5.*; //import ControlP5 library //<>// //<>//
+// --- Imports ---
+import controlP5.*; 
 import processing.serial.*;
 
+// --- Global Variables ---
 Serial port;
-
-ControlP5 cp5; //create ControlP5 object
+ControlP5 cp5; 
 PFont font;
 PImage image;
 Textfield angleTextfield, heightTextfield, emergencyDialSettingsTextfield, notificationTypeTextfield, metricsTextfield;
-Button angleButton, angleEnterButton,notificationTypeVibrateButton, notificationTypeBuzzerButton, notificationTypeLedButton, strengthButton, initialDistanceButton, heightButton,distanceButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
+Button angleButton, angleEnterButton,notificationTypeVibrateButton, notificationTypeBuzzerButton, notificationTypeLedButton, 
+strengthButton, initialDistanceButton, heightButton,distanceButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
 metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, backToMainMenuButton, saveButton;
-String str = null;
-float myVal;
-int sonto;
-boolean isReadingSensor = false;
-boolean firstContact = false;        // Whether we've heard from the microcontroller //<>//
+
+int curChar;                         // Current character being read from Arduino
+boolean isReadingSensor = false;     // Whether we're currently reading data from the sensor
+boolean firstContact = false;        // Whether we've heard from the microcontroller 
 
 
-void setup(){ //same as arduino program
-  println("windowWidth: " + displayWidth);
-  println("windowHeight: " + displayHeight);
-  size(1920, 1080);    //window size, (width, height)
+void setup(){
+  size(1920, 1080);                  // Window size, (width, height)
   surface.setLocation(0,0);
-  printArray(Serial.list());   //prints all available serial ports
+  printArray(Serial.list());         // Print all available serial ports
   
-  port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  port = new Serial(this, "COM7", 115200);
   if (port.available() > 0) {
   }
   
   cp5 = new ControlP5(this);
-  font = createFont("david bold", 40);    // custom fonts for buttons and title
-  image = loadImage("./lior.jpg"); // Load the image
+  font = createFont("david bold", 40);     // Custom fonts for buttons and title
+  image = loadImage("./lior.jpg");         // Load the image
 
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
-  fill(255, 255, 255);               //text color (r, g, b)
+  fill(255, 255, 255);               
   textFont(font);
-  //frameRate(10);
-  
 
   angleButton = cp5.addButton("angleButton")     
-    .setPosition(displayWidth * 6.75/8, displayHeight * 0.5/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
+    .setPosition(displayWidth * 6.75/8, displayHeight * 0.5/8)
+    .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("זווית החיישן")
-    .setColorBackground(color(90, 154, 215))
-  ;   
+    .setColorBackground(color(90, 154, 215));   
 
-  heightButton = cp5.addButton("heightButton")     //"קליברציה אחורית" is the name of button
-    .setPosition(displayWidth * 6.75/8, displayHeight * 1.65/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
+  heightButton = cp5.addButton("heightButton")
+    .setPosition(displayWidth * 6.75/8, displayHeight * 1.65/8) 
+    .setSize(displayWidth / 7, displayWidth / 16)    
     .setFont(font)
     .setLabel("גובה החיישן")
-    .setColorBackground(color(90, 154, 215))
-  ;
+    .setColorBackground(color(90, 154, 215));
 
-  emergencyDialSettingsButton = cp5.addButton("emergencyDialSettingsButton")     //"blue" is the name of button
-    .setPosition(displayWidth * 6.75/8, displayHeight * 2.9/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
+  emergencyDialSettingsButton = cp5.addButton("emergencyDialSettingsButton")
+    .setPosition(displayWidth * 6.75/8, displayHeight * 2.9/8) 
+    .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("הגדרות חיוג חירום")    
-    .setColorBackground(color(90, 154, 215))
-  ;
+    .setColorBackground(color(90, 154, 215));
   
-  notificationTypeButton = cp5.addButton("notificationTypeButton")     //"alloff" is the name of button
-    .setPosition(displayWidth * 6.75/8, displayHeight * 4.15/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
+  notificationTypeButton = cp5.addButton("notificationTypeButton")     
+    .setPosition(displayWidth * 6.75/8, displayHeight * 4.15/8)  
+    .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("סוג התראה")
-    .setColorBackground(color(90, 154, 215))
-  ;
+    .setColorBackground(color(90, 154, 215));
   
-    metricsButton = cp5.addButton("metricsButton")     //"alloff" is the name of button
-    .setPosition(displayWidth * 6.75/8, displayHeight * 5.4/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
+    metricsButton = cp5.addButton("metricsButton")     
+    .setPosition(displayWidth * 6.75/8, displayHeight * 5.4/8)  
+    .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("קריאת מדדים")    
-    .setColorBackground(color(90, 154, 215))
-  ;
+    .setColorBackground(color(90, 154, 215));
   
-     saveButton = cp5.addButton("saveButton")     //"alloff" is the name of button
-    .setPosition(displayWidth * 6.75/8, displayHeight * 6.65/8)  //x and y coordinates of upper left corner of button
-    .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
+     saveButton = cp5.addButton("saveButton")     
+    .setPosition(displayWidth * 6.75/8, displayHeight * 6.65/8)  
+    .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("יציאה")    
-    .setColorBackground(color(90, 154, 215))
-  ;
+    .setColorBackground(color(90, 154, 215));
 }
 
-void draw(){  //same as loop in arduino
+void draw(){  
   while (port.available() > 0) {
     mySerialEvent();
   }
 }
 
 void mySerialEvent() {
-    // read a byte from the serial port:
-    int inByte = port.read();
-    // if this is the first byte received, and it's an A, clear the serial
-    // buffer and note that you've had first contact from the microcontroller.
+    int inByte = port.read();                  
+    // Read a byte from the serial port
+    // If this is the first byte received, and it's an A, clear the serial buffer and note that you've had first contact from the microcontroller
     if (firstContact == false) {
       if (inByte == 'A') {
-        port.clear();          // clear the serial port buffer
-        firstContact = true;     // you've had first contact from the microcontroller
-        port.write('A');       // ask for more
+        port.clear();              // Clear the serial port buffer
+        firstContact = true;       // You've had first contact from the microcontroller
+        port.write('A');           // Ask for more
       }
     }
     else{
       String buffer = "";
-    
       while (port.available() > 0) {
-    
-        sonto = port.read();
-        buffer += char(sonto);
+        curChar = port.read();
+        buffer += char(curChar);
 
-      }
-      if (buffer.length() != 0) {
-          String[] list = split(buffer, '\n');
-          if (isReadingSensor) {
-                      background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-          }
-          for (int i = 0; i < list.length; i++) {
-            if ((list[i].length()) > 0 && isReadingSensor == true) {
-              print(list[i]);
-              if (list[i].charAt(0) == 'D') {
-                text(list[i].substring(1), displayWidth * 1.8/8 , displayHeight * 3.5/8);  
-              }
-              else if (list[i].charAt(0) == 'S') {
-                text(list[i].substring(1), displayWidth * 3.8/8 , displayHeight * 3.5/8);  
-              }
-              else if (list[i].charAt(0) == 'I') {
-                text(list[i].substring(1), displayWidth * 5.8/8 , displayHeight * 3.5/8);  
-              }
+    }
+    if (buffer.length() != 0) {
+        String[] list = split(buffer, '\n');
+        if (isReadingSensor) {
+          background(223, 130 , 68); 
+        }
+        for (int i = 0; i < list.length; i++) {
+          if ((list[i].length()) > 0 && isReadingSensor == true) {
+            print(list[i]);
+            if (list[i].charAt(0) == 'D') {
+              text(list[i].substring(1), displayWidth * 1.8/8 , displayHeight * 3.5/8);  
             }
-          }       
+            else if (list[i].charAt(0) == 'S') {
+              text(list[i].substring(1), displayWidth * 3.8/8 , displayHeight * 3.5/8);  
+            }
+            else if (list[i].charAt(0) == 'I') {
+              text(list[i].substring(1), displayWidth * 5.8/8 , displayHeight * 3.5/8);  
+            }
+          }
+        }       
       }    
   }
 }
 
-
 void angleButton(){
-  //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-
   heightButton.hide();
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
   saveButton.hide();
-
 
   angleTextfield = cp5.addTextfield("angleTextfield")
     .setPosition(displayWidth * 5.5/8, displayHeight * 0.5/8)
@@ -160,11 +144,10 @@ void angleButton(){
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
     .setLabel("שמירה");
-    
 }
 
 void angleEnterButton() {
-   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
 
   angleTextfield.hide();
   angleEnterButton.hide();
@@ -175,16 +158,14 @@ void angleEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
+  
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
   port.write("a " + angleTextfield.getText() + "*");
 }
 
 
-void heightButton(){
-   //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  
+void heightButton(){  
   angleButton.hide();
-  //heightButton.hide();
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
@@ -197,7 +178,7 @@ void heightButton(){
     .setLabel("");
     
   heightEnterButton = cp5.addButton("heightEnterButton")    
-    .setPosition(displayWidth * 4.25/8, displayHeight * 1.65/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 4.25/8, displayHeight * 1.65/8) 
     .setSize(displayWidth / 7, displayWidth / 16)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
@@ -206,7 +187,7 @@ void heightButton(){
 
 
 void heightEnterButton() {
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
    
   heightTextfield.hide();
   heightEnterButton.hide();
@@ -217,16 +198,14 @@ void heightEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
+  
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
   port.write("h " + heightTextfield.getText() + "*");
 }
 
-void emergencyDialSettingsButton () {
-  //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  
+void emergencyDialSettingsButton () {  
   angleButton.hide();
   heightButton.hide();
-  //emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
   metricsButton.hide();
   saveButton.hide();
@@ -238,7 +217,7 @@ void emergencyDialSettingsButton () {
     .setLabel("");
     
   emergencyDialSettingsEnterButton = cp5.addButton("emergencyDialSettingsEnterButton")    
-    .setPosition(displayWidth * 4.25/8, displayHeight * 2.9/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 4.25/8, displayHeight * 2.9/8)  
     .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
@@ -247,7 +226,7 @@ void emergencyDialSettingsButton () {
 
 
 void emergencyDialSettingsEnterButton() {
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
   emergencyDialSettingsTextfield.hide();
   emergencyDialSettingsEnterButton.hide();
   
@@ -262,13 +241,10 @@ void emergencyDialSettingsEnterButton() {
   port.write("e " + emergencyDialSettingsTextfield.getText() + "*");
 }
 
-void notificationTypeButton () {
-  //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  
+void notificationTypeButton () {  
   angleButton.hide();
   heightButton.hide();
   emergencyDialSettingsButton.hide();
-  //notificationTypeButton.hide(); 
   metricsButton.hide();
   saveButton.hide();
   
@@ -293,7 +269,7 @@ void notificationTypeButton () {
 }
 
 void notificationTypeVibrateButton() {
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
   
   notificationTypeVibrateButton.hide();
   notificationTypeBuzzerButton.hide();
@@ -311,7 +287,7 @@ void notificationTypeVibrateButton() {
 }
 
 void notificationTypeBuzzerButton() {
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
   
   notificationTypeVibrateButton.hide();
   notificationTypeBuzzerButton.hide();
@@ -329,7 +305,7 @@ void notificationTypeBuzzerButton() {
 }
 
 void notificationTypeLedButton() {
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
   
   notificationTypeVibrateButton.hide();
   notificationTypeBuzzerButton.hide();
@@ -347,7 +323,7 @@ void notificationTypeLedButton() {
 }
 
 void metricsButton(){
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
 
   angleButton.hide();
   heightButton.hide();
@@ -357,39 +333,36 @@ void metricsButton(){
   saveButton.hide();
 
   backToMainMenuButton = cp5.addButton("backToMainMenuButton")    
-    .setPosition(displayWidth * 0.15/8, displayHeight * 6.5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 0.15/8, displayHeight * 6.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
     .setLabel("חזרה לתפריט הראשי");
     
-    
   distanceButton = cp5.addButton("distanceButton")    
-    .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    //.setColorBackground(color(223, 130 , 68))
     .setLabel("מרחק");
     
     strengthButton = cp5.addButton("strengthButton")    
-    .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    //.setColorBackground(color(223, 130 , 68))
     .setLabel("עוצמה");  
     
     initialDistanceButton = cp5.addButton("initialDistanceButton")    
-    .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
+    .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    //.setColorBackground(color(223, 130 , 68))
-    .setLabel("מרחק נורמה");  
-  isReadingSensor = true;
+    .setLabel("מרחק נורמה"); 
+    
+    isReadingSensor = true;
     port.write("m *");
 }
 
 void backToMainMenuButton() {
-  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); 
   
   backToMainMenuButton.hide();
   distanceButton.hide();
@@ -402,18 +375,14 @@ void backToMainMenuButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
-   //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-   isReadingSensor =false; //<>//
-     
-   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
-    
-
+  
+  isReadingSensor = false;
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
 }
 
 
 void saveButton(){
-    background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-
+    background(223, 130 , 68); 
     port.write("s exit*");
     exit();
 }
