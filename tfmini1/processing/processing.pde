@@ -7,7 +7,7 @@ ControlP5 cp5; //create ControlP5 object
 PFont font;
 PImage image;
 Textfield angleTextfield, heightTextfield, emergencyDialSettingsTextfield, notificationTypeTextfield, metricsTextfield;
-Button angleButton, angleEnterButton, strengthButton, initialDistanceButton, heightButton,distanceButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
+Button angleButton, angleEnterButton,notificationTypeVibrateButton, notificationTypeBuzzerButton, notificationTypeLedButton, strengthButton, initialDistanceButton, heightButton,distanceButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
 metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, backToMainMenuButton, saveButton;
 String str = null;
 float myVal;
@@ -23,7 +23,7 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  port = new Serial(this, "COM7", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
   if (port.available() > 0) {
   }
   
@@ -95,18 +95,6 @@ void draw(){  //same as loop in arduino
   while (port.available() > 0) {
     mySerialEvent();
   }
-
-//    sonto = port.read();
-//    buffer += char(sonto);
-    
-    //if (sonto != null) {
-    //  background(0);
-    //  myVal = float(str);
-    //  //println(myVal);
-  //}
-  //if (buffer.length() != 0) {
-  //    println(buffer);
-  //}
 }
 
 void mySerialEvent() {
@@ -286,38 +274,32 @@ void notificationTypeButton () {
   metricsButton.hide();
   saveButton.hide();
   
-  notificationTypeTextfield = cp5.addTextfield("notificationTypeTextfield")
-    .setPosition(displayWidth * 3.15/8, displayHeight * 3.5/8)
+  notificationTypeVibrateButton = cp5.addButton("notificationTypeVibrateButton")
+    .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)
     .setSize(displayWidth / 5, displayWidth / 16)
     .setFont(font)
-    .setLabel("");
+    .setLabel("רטט");
     
-  notificationTypeEnterButton = cp5.addButton("notificationTypeEnterButton")    
-    .setPosition(displayWidth * 1.15/8, displayHeight * 3.5/8)
-    .setFont(font)
-    .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
-    .setColorBackground(color(90, 154, 215))
-    .setLabel("שמירה");
-
-  //DropdownList notificationTypeDropdownList = cp5.addDropdownList("notificationTypeDropdownList")
-  //.setLabel("סוג התראה")
-  //.setPosition(500, 150)
-  //.setColorBackground(color(90, 154, 215))
-  //.setFont(font)
-  //.setItemHeight(20)
-  //.setBarHeight(25);
+   notificationTypeBuzzerButton = cp5.addButton("notificationTypeBuzzerButton")
+  .setPosition(displayWidth * 3.15/8, displayHeight * 3.5/8)
+  .setSize(displayWidth / 5, displayWidth / 16)
+  .setFont(font)
+  .setLabel("באזר");
   
-  //notificationTypeDropdownList
-  //.addItem("רטט", notificationTypeDropdownList)
-  //.addItem("לד", notificationTypeDropdownList)
-  //.addItem("זמזם", notificationTypeDropdownList);
+   notificationTypeLedButton = cp5.addButton("notificationTypeLedButton")
+  .setPosition(displayWidth * 3.15/8, displayHeight * 5.5/8)
+  .setSize(displayWidth / 5, displayWidth / 16)
+  .setFont(font)
+  .setLabel("לד");
+
 }
 
-void notificationTypeEnterButton() {
+void notificationTypeVibrateButton() {
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
   
-  notificationTypeTextfield.hide();
-  notificationTypeEnterButton.hide();
+  notificationTypeVibrateButton.hide();
+  notificationTypeBuzzerButton.hide();
+  notificationTypeLedButton.hide();
   
   angleButton.show();
   heightButton.show();
@@ -327,7 +309,43 @@ void notificationTypeEnterButton() {
   saveButton.show();
 
   image(image, 0, 30, displayWidth / 2, displayWidth / 2);
-  port.write("n " + notificationTypeTextfield.getText() + "*");
+  port.write("n vibrate*");
+}
+
+void notificationTypeBuzzerButton() {
+  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  
+  notificationTypeVibrateButton.hide();
+  notificationTypeBuzzerButton.hide();
+  notificationTypeLedButton.hide();
+  
+  angleButton.show();
+  heightButton.show();
+  emergencyDialSettingsButton.show();
+  notificationTypeButton.show(); 
+  metricsButton.show();
+  saveButton.show();
+
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  port.write("n buzzer*");
+}
+
+void notificationTypeLedButton() {
+  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  
+  notificationTypeVibrateButton.hide();
+  notificationTypeBuzzerButton.hide();
+  notificationTypeLedButton.hide();
+  
+  angleButton.show();
+  heightButton.show();
+  emergencyDialSettingsButton.show();
+  notificationTypeButton.show(); 
+  metricsButton.show();
+  saveButton.show();
+
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  port.write("n led*");
 }
 
 void metricsButton(){
