@@ -1,4 +1,4 @@
-// --- Imports ---
+// --- Imports --- //<>//
 import controlP5.*; 
 import processing.serial.*;
 
@@ -16,15 +16,15 @@ int curChar;                         // Current character being read from Arduin
 boolean isReadingSensor = false;     // Whether we're currently reading data from the sensor
 boolean firstContact = false;        // Whether we've heard from the microcontroller 
 
-
+ //<>//
 void setup(){
   size(1920, 1080);                  // Window size, (width, height)
   surface.setLocation(0,0);
   printArray(Serial.list());         // Print all available serial ports
   
-  port = new Serial(this, "COM7", 115200);
-  if (port.available() > 0) {
-  }
+  //port = new Serial(this, "COM7", 115200);
+  //if (port.available() > 0) {
+  //}
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);     // Custom fonts for buttons and title
@@ -79,9 +79,9 @@ void setup(){
 }
 
 void draw(){  
-  while (port.available() > 0) {
-    mySerialEvent();
-  }
+  //while (port.available() > 0) {
+  //  mySerialEvent();
+  //}
 }
 
 void mySerialEvent() {
@@ -124,6 +124,18 @@ void mySerialEvent() {
       }    
   }
 }
+
+
+void setLock(Controller theController, boolean theValue) {
+  theController.setLock(theValue);
+  if(theValue) {
+    theController.setColorBackground(color(8, 44, 92));
+  } else {
+    theController.setColorBackground(color(8, 44, 92));
+  }
+}
+
+
 
 void angleButton(){
   heightButton.hide();
@@ -338,24 +350,31 @@ void metricsButton(){
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
     .setLabel("חזרה לתפריט הראשי");
-    
+  
+
   distanceButton = cp5.addButton("distanceButton")    
     .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setLabel("מרחק");
-    
+  
+    setLock(cp5.getController("distanceButton"),true);
+
     strengthButton = cp5.addButton("strengthButton")    
     .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setLabel("עוצמה");  
     
+     setLock(cp5.getController("strengthButton"),true);
+
     initialDistanceButton = cp5.addButton("initialDistanceButton")    
     .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setLabel("מרחק נורמה"); 
+    
+     setLock(cp5.getController("initialDistanceButton"),true);
     
     isReadingSensor = true;
     port.write("m *");
@@ -382,7 +401,7 @@ void backToMainMenuButton() {
 
 
 void saveButton(){
-    background(223, 130 , 68); 
+    background(223, 130 , 68);  //<>//
     port.write("s exit*");
     exit();
 }
