@@ -1,1 +1,0 @@
-TF Mini-S Lidar/TOF sensor by zxynine on Thingiverse: https://www.thingiverse.com/thing:4681599
