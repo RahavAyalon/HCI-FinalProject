@@ -79,6 +79,8 @@ void setup()
   Serial.println ("Initializing...");
   SerialTFMini.begin(TFMINI_BAUDRATE);    //Initialize the data rate for the SoftwareSerial port
   tfmini.begin(&SerialTFMini);            //Initialize the TF Mini sensor
+//  tfmini.sendCommand(SET_BAUD_RATE, BAUD_9600);
+
 
   establishContact();  // send a byte to establish contact until receiver responds
   delay(50);
@@ -136,6 +138,11 @@ void loop()
 //  Serial.print("cm\t");
 //  Serial.print("strength: ");
 //  Serial.println(strength);
+
+    Serial.println(
+      " Distance: " + String(distance) + " cm \n" + 
+      "Initial Distance: " + String(initDistance) + " cm \n" +
+      "Strength: " + String(strength) + " \n");
   
 //  for (int i = 31; 0 < i; i--) {        //we shift all vals in cyclicArray to the right
 //    cyclicArray[i] = cyclicArray[i-1];
@@ -151,12 +158,12 @@ void loop()
   if (counter == 32){
       counter = 0;                     //we reset counter to refill cyclicArray once again
 
-      Serial.print("current ");
-      Serial.println(currentAverage,0);
-      Serial.print("last ");
-      Serial.println(lastAverage,0);
-      Serial.print("init ");
-      Serial.println(initDistance,0);
+
+
+//      Serial.println(
+//        " Distance: " + String(distance) + " cm \n" + 
+//        "Initial Distance: " + String(initDistance) + " cm \n" +
+//        "Strength: " + String(strength) + " cm \n");
  
 
       if (currentAverage < 10){   //something is very close to the sensor
@@ -255,23 +262,39 @@ void techMode(){
     }
 
    else if (inString[0] == 'm'){
+      int counter = 0;
       while (true){
-        getTFminiData(&distance, &strength);    //we read from sensor into distance     
-        Serial.print(" Distance: ");
-        Serial.print( distance);
-        Serial.println(" cm");
-        Serial.print(" Initial distance ");
-        Serial.print(initDistance);
-        Serial.println(" cm");
-        Serial.print(" Strength: ");
-        Serial.println(strength);
-    }  
-   }
-   else if (inString[0] == 's') {
-      break;
+        while (!Serial);            // wait for serial port to connect. Needed for native USB port only
+        getTFminiData(&distance, &strength);    //we read from sensor into distance   
+        if (counter == 11520){
+          Serial.println(
+          " Distance: " + String(distance) + " cm \n" + 
+          "Initial Distance: " + String(initDistance) + " cm \n" +
+          "Strength: " + String(strength) + "\n");
+          counter = 0;
+
+  //        Serial.print(" Distance: ");
+  //        Serial.print( distance);
+  //        Serial.println(" cm");
+  //        Serial.print(" Initial distance ");
+  //        Serial.print(initDistance);
+  //        Serial.println(" cm");
+  //        Serial.print(" Strength: ");
+  //        Serial.println(strength);
+        }
+        counter++;
+        
+        }
+//        String x = Serial.readString();
+//        if (inString[0] == 'm'){
+//          break;
+//        }
+      }
+
+ 
+      }
   }  
-}
-}
+
 
 void getVariables(){
   //get global variables values from EEPROM
