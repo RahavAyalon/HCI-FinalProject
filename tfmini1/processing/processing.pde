@@ -116,7 +116,9 @@ void mySerialEvent() {
       }
       if (buffer.length() != 0) {
           String[] list = split(buffer, '\n');
-          background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+          if (isReadingSensor) {
+                      background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+          }
           for (int i = 0; i < list.length; i++) {
             if ((list[i].length()) > 0 && isReadingSensor == true) {
               print(list[i]);
