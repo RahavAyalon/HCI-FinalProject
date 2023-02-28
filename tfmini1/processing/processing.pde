@@ -18,7 +18,8 @@ boolean firstContact = false;        // Whether we've heard from the microcontro
 
  //<>//
 void setup(){
-  size(1920, 1080);                  // Window size, (width, height)
+  //size(1920, 1080);                  // Window size, (width, height)
+  fullScreen();
   surface.setLocation(0,0);
   printArray(Serial.list());         // Print all available serial ports
   
@@ -27,7 +28,7 @@ void setup(){
   //}
   
   cp5 = new ControlP5(this);
-  font = createFont("david bold", 40);     // Custom fonts for buttons and title
+  font = createFont("david bold", 38);     // Custom fonts for buttons and title
   image = loadImage("./lior.jpg");         // Load the image
 
   background(223, 130 , 68); 
@@ -400,8 +401,8 @@ void backToMainMenuButton() {
 }
 
 
-void saveButton(){
-    background(223, 130 , 68);  //<>//
+void saveButton(){ //<>//
+    background(223, 130 , 68); 
     port.write("s exit*");
     exit();
 }
