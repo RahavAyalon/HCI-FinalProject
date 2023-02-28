@@ -23,9 +23,9 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  //port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
-  //if (port.available() > 0) {
-  //}
+  port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  if (port.available() > 0) {
+  }
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
@@ -88,9 +88,9 @@ void setup(){ //same as arduino program
 }
 
 void draw(){  //same as loop in arduino
-  //while (port.available() > 0) {
-  //  mySerialEvent();
-  //}
+  while (port.available() > 0) {
+    mySerialEvent();
+  }
 }
 
 void mySerialEvent() {
@@ -271,19 +271,19 @@ void notificationTypeButton () {
   saveButton.hide();
   
   notificationTypeVibrateButton = cp5.addButton("notificationTypeVibrateButton")
-    .setPosition(displayWidth * 5.7/8, displayHeight * 4.15/8)
+    .setPosition(displayWidth * 5.95/8, displayHeight * 4.15/8)
     .setSize(displayWidth / 12, displayWidth / 16)
     .setFont(font)
     .setLabel("רטט");
     
    notificationTypeBuzzerButton = cp5.addButton("notificationTypeBuzzerButton")
-  .setPosition(displayWidth * 5.1/8, displayHeight * 4.15/8)
+  .setPosition(displayWidth * 5.15/8, displayHeight * 4.15/8)
   .setSize(displayWidth / 12, displayWidth / 16)
   .setFont(font)
   .setLabel("באזר");
   
    notificationTypeLedButton = cp5.addButton("notificationTypeLedButton")
-  .setPosition(displayWidth * 4.3/8, displayHeight * 4.15/8)
+  .setPosition(displayWidth * 4.35/8, displayHeight * 4.15/8)
   .setSize(displayWidth / 12, displayWidth / 16)
   .setFont(font)
   .setLabel("לד");
