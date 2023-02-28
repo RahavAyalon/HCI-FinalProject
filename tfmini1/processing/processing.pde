@@ -32,7 +32,7 @@ void setup(){ //same as arduino program
   image = loadImage("C:\\Users\\rahav\\Documents\\sketch_230220a\\data\\lior.jpg"); // Load the image
 
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
   fill(255, 255, 255);               //text color (r, g, b)
   textFont(font);
   //frameRate(10);
@@ -173,7 +173,7 @@ void angleEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
   port.write("a " + angleTextfield.getText() + "*");
 }
 
@@ -215,7 +215,7 @@ void heightEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
   port.write("h " + heightTextfield.getText() + "*");
 }
 
@@ -256,7 +256,7 @@ void emergencyDialSettingsEnterButton() {
   metricsButton.show();
   saveButton.show();
   
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
   port.write("e " + emergencyDialSettingsTextfield.getText() + "*");
 }
 
@@ -271,19 +271,19 @@ void notificationTypeButton () {
   saveButton.hide();
   
   notificationTypeVibrateButton = cp5.addButton("notificationTypeVibrateButton")
-    .setPosition(displayWidth * 5.8/8, displayHeight * 4.15/8)
+    .setPosition(displayWidth * 5.7/8, displayHeight * 4.15/8)
     .setSize(displayWidth / 12, displayWidth / 16)
     .setFont(font)
     .setLabel("רטט");
     
    notificationTypeBuzzerButton = cp5.addButton("notificationTypeBuzzerButton")
-  .setPosition(displayWidth * 5/8, displayHeight * 4.15/8)
+  .setPosition(displayWidth * 5.1/8, displayHeight * 4.15/8)
   .setSize(displayWidth / 12, displayWidth / 16)
   .setFont(font)
   .setLabel("באזר");
   
    notificationTypeLedButton = cp5.addButton("notificationTypeLedButton")
-  .setPosition(displayWidth * 4.2/8, displayHeight * 4.15/8)
+  .setPosition(displayWidth * 4.3/8, displayHeight * 4.15/8)
   .setSize(displayWidth / 12, displayWidth / 16)
   .setFont(font)
   .setLabel("לד");
@@ -304,8 +304,8 @@ void notificationTypeVibrateButton() {
   metricsButton.show();
   saveButton.show();
 
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
-  port.write("n vibrate*");
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  port.write("n 1*");
 }
 
 void notificationTypeBuzzerButton() {
@@ -322,8 +322,8 @@ void notificationTypeBuzzerButton() {
   metricsButton.show();
   saveButton.show();
 
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
-  port.write("n buzzer*");
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  port.write("n 2*");
 }
 
 void notificationTypeLedButton() {
@@ -340,8 +340,8 @@ void notificationTypeLedButton() {
   metricsButton.show();
   saveButton.show();
 
-  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
-  port.write("n led*");
+  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  port.write("n 3*");
 }
 
 void metricsButton(){
@@ -354,7 +354,6 @@ void metricsButton(){
   metricsButton.hide();
   saveButton.hide();
 
- 
   backToMainMenuButton = cp5.addButton("backToMainMenuButton")    
     .setPosition(displayWidth * 0.15/8, displayHeight * 6.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
@@ -367,21 +366,21 @@ void metricsButton(){
     .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(0,0,0))
+    //.setColorBackground(color(223, 130 , 68))
     .setLabel("מרחק");
     
     strengthButton = cp5.addButton("strengthButton")    
     .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(0,0,0))
+    //.setColorBackground(color(223, 130 , 68))
     .setLabel("עוצמה");  
     
     initialDistanceButton = cp5.addButton("initialDistanceButton")    
     .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(0,0,0))
+    //.setColorBackground(color(223, 130 , 68))
     .setLabel("מרחק נורמה");  
   isReadingSensor = true;
     port.write("m *");
@@ -404,7 +403,7 @@ void backToMainMenuButton() {
    //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
    isReadingSensor =false; //<>//
      
-   image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
     
 
 }
