@@ -29,7 +29,7 @@ void setup(){ //same as arduino program
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
-  image = loadImage("C:\\Users\\rahav\\Documents\\sketch_230220a\\data\\lior.jpg"); // Load the image
+  image = loadImage("./lior.jpg"); // Load the image
 
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
@@ -305,7 +305,7 @@ void notificationTypeVibrateButton() {
   saveButton.show();
 
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
-  port.write("n 1*");
+  port.write("n 0*");
 }
 
 void notificationTypeBuzzerButton() {
@@ -323,7 +323,7 @@ void notificationTypeBuzzerButton() {
   saveButton.show();
 
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
-  port.write("n 2*");
+  port.write("n 1*");
 }
 
 void notificationTypeLedButton() {
@@ -341,7 +341,7 @@ void notificationTypeLedButton() {
   saveButton.show();
 
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
-  port.write("n 3*");
+  port.write("n 2*");
 }
 
 void metricsButton(){
