@@ -7,12 +7,12 @@ ControlP5 cp5; //create ControlP5 object
 PFont font;
 PImage image;
 Textfield angleTextfield, heightTextfield, emergencyDialSettingsTextfield, notificationTypeTextfield, metricsTextfield;
-Button angleButton, angleEnterButton, heightButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
+Button angleButton, angleEnterButton, strengthButton, initialDistanceButton, heightButton,distanceButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
 metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, metricsEnterButton, saveButton;
 String str = null;
 float myVal;
 int sonto;
-
+boolean isReadingSensor = false;
 boolean firstContact = false;        // Whether we've heard from the microcontroller
 
 
@@ -32,7 +32,7 @@ void setup(){ //same as arduino program
   image = loadImage("C:\\Users\\rahav\\Documents\\sketch_230220a\\data\\lior.jpg"); // Load the image
 
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-  //image(image, 0, 30, displayWidth / 2, displayWidth / 2);
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   fill(255, 255, 255);               //text color (r, g, b)
   textFont(font);
   //frameRate(10);
@@ -144,16 +144,16 @@ void mySerialEvent() {
           //println(initialDistance.substring(1));
           background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
           for (int i = 0; i < list.length; i++) {
-            if ((list[i].length()) > 0) {
+            if ((list[i].length()) > 0 && isReadingSensor == true) {
               print(list[i]);
               if (list[i].charAt(0) == 'D') {
-              text(list[i].substring(1), 10 , 100);  
+              text(list[i].substring(1), displayWidth * 1.8/8 , displayHeight * 3.5/8);  
             }
             else if (list[i].charAt(0) == 'S') {
-              text(list[i].substring(1), 200 , 100);  
+              text(list[i].substring(1), displayWidth * 3.8/8 , displayHeight * 3.5/8);  
             }
             else if (list[i].charAt(0) == 'I') {
-              text(list[i].substring(1), 400 , 100);  
+              text(list[i].substring(1), displayWidth * 5.8/8 , displayHeight * 3.5/8);  
             }
             }
             
@@ -336,6 +336,7 @@ void notificationTypeEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
+
   
   port.write("n " + notificationTypeTextfield.getText() + "*");
 }
@@ -347,30 +348,49 @@ void metricsButton(){
   heightButton.hide();
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
-  //metricsButton.hide();
+  metricsButton.hide();
   saveButton.hide();
+
  
-  
-  //metricsTextfield = cp5.addTextfield("metricsTextfield")
-  //   .setPosition(displayWidth * 3.15/8, displayHeight * 4.5/8)
-  //  .setSize(displayWidth / 5, displayWidth / 16)
-  //  .setFont(font)
-  //  .setLabel("");
-    
   metricsEnterButton = cp5.addButton("metricsEnterButton")    
     .setPosition(displayWidth * 1.15/8, displayHeight * 4.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
     .setLabel("חזרה לתפריט הראשי");
+    
+    
+  distanceButton = cp5.addButton("distanceButton")    
+    .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
+    .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
+    .setFont(font)
+    .setColorBackground(color(90, 154, 215))
+    .setLabel("מרחק");
+    
+    strengthButton = cp5.addButton("strengthButton")    
+    .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
+    .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
+    .setFont(font)
+    .setColorBackground(color(90, 154, 215))
+    .setLabel("עוצמה");  
+    
+    initialDistanceButton = cp5.addButton("initialDistanceButton")    
+    .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
+    .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
+    .setFont(font)
+    .setColorBackground(color(90, 154, 215))
+    .setLabel("מרחק נורמה");  
+  isReadingSensor = true;
     port.write("m *");
 }
 
 void metricsEnterButton() {
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
   
-  //metricsTextfield.hide();
   metricsEnterButton.hide();
+  distanceButton.hide();
+  strengthButton.hide();
+  initialDistanceButton.hide();
   
   angleButton.show();
   heightButton.show();
@@ -378,13 +398,17 @@ void metricsEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
-  
-  //port.write("m " + metricsTextfield.getText() + "*");
+   //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+     isReadingSensor =false;
+    //rect(100,100,500,500);
+    
+
 }
 
 
 void saveButton(){
-  
+    background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+
     port.write("s exit*");
     exit();
 }
