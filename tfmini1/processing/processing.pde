@@ -8,7 +8,7 @@ PFont font;
 PImage image;
 Textfield angleTextfield, heightTextfield, emergencyDialSettingsTextfield, notificationTypeTextfield, metricsTextfield;
 Button angleButton, angleEnterButton, strengthButton, initialDistanceButton, heightButton,distanceButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
-metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, metricsEnterButton, saveButton;
+metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, backToMainMenuButton, saveButton;
 String str = null;
 float myVal;
 int sonto;
@@ -23,9 +23,9 @@ void setup(){ //same as arduino program
   surface.setLocation(0,0);
   printArray(Serial.list());   //prints all available serial ports
   
-  port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
-  if (port.available() > 0) {
-  }
+  //port = new Serial(this, "COM3", 115200);  //i have connected arduino to com3, it would be different in linux and mac os
+  //if (port.available() > 0) {
+  //}
   
   cp5 = new ControlP5(this);
   font = createFont("david bold", 40);    // custom fonts for buttons and title
@@ -92,9 +92,9 @@ void draw(){  //same as loop in arduino
 
   String buffer = "";
 
-  while (port.available() > 0) {
-    mySerialEvent();
-  }
+  //while (port.available() > 0) {
+  //  mySerialEvent();
+  //}
 
 //    sonto = port.read();
 //    buffer += char(sonto);
@@ -133,15 +133,6 @@ void mySerialEvent() {
       }
       if (buffer.length() != 0) {
           String[] list = split(buffer, '\n');
-          //String distance = list[0];          
-          //String strength = list[1];
-          //String initialDistance = list[2];
-
-          
-          //println(list[0] + list[1] + list[2]);
-          //println(distance.substring(1));
-          //println(strength.substring(1));
-          //println(initialDistance.substring(1));
           background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
           for (int i = 0; i < list.length; i++) {
             if ((list[i].length()) > 0 && isReadingSensor == true) {
@@ -164,9 +155,8 @@ void mySerialEvent() {
 
 
 void angleButton(){
-   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
+  background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
 
-  //angleButton.hide();
   heightButton.hide();
   emergencyDialSettingsButton.hide();
   notificationTypeButton.hide(); 
@@ -201,7 +191,7 @@ void angleEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
-  
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   port.write("a " + angleTextfield.getText() + "*");
 }
 
@@ -243,7 +233,7 @@ void heightEnterButton() {
   notificationTypeButton.show(); 
   metricsButton.show();
   saveButton.show();
-  
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   port.write("h " + heightTextfield.getText() + "*");
 }
 
@@ -284,6 +274,7 @@ void emergencyDialSettingsEnterButton() {
   metricsButton.show();
   saveButton.show();
   
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   port.write("e " + emergencyDialSettingsTextfield.getText() + "*");
 }
 
@@ -337,7 +328,7 @@ void notificationTypeEnterButton() {
   metricsButton.show();
   saveButton.show();
 
-  
+  image(image, 0, 30, displayWidth / 2, displayWidth / 2);
   port.write("n " + notificationTypeTextfield.getText() + "*");
 }
 
@@ -352,8 +343,8 @@ void metricsButton(){
   saveButton.hide();
 
  
-  metricsEnterButton = cp5.addButton("metricsEnterButton")    
-    .setPosition(displayWidth * 1.15/8, displayHeight * 4.5/8)  //x and y coordinates of upper left corner of button
+  backToMainMenuButton = cp5.addButton("backToMainMenuButton")    
+    .setPosition(displayWidth * 0.15/8, displayHeight * 6.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(90, 154, 215))
@@ -364,30 +355,30 @@ void metricsButton(){
     .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(90, 154, 215))
+    .setColorBackground(color(0,0,0))
     .setLabel("מרחק");
     
     strengthButton = cp5.addButton("strengthButton")    
     .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(90, 154, 215))
+    .setColorBackground(color(0,0,0))
     .setLabel("עוצמה");  
     
     initialDistanceButton = cp5.addButton("initialDistanceButton")    
     .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(90, 154, 215))
+    .setColorBackground(color(0,0,0))
     .setLabel("מרחק נורמה");  
   isReadingSensor = true;
     port.write("m *");
 }
 
-void metricsEnterButton() {
+void backToMainMenuButton() {
   background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
   
-  metricsEnterButton.hide();
+  backToMainMenuButton.hide();
   distanceButton.hide();
   strengthButton.hide();
   initialDistanceButton.hide();
@@ -399,8 +390,9 @@ void metricsEnterButton() {
   metricsButton.show();
   saveButton.show();
    //background(223, 130 , 68); // background color of window (r, g, b) or (0 to 255)
-     isReadingSensor =false;
-    //rect(100,100,500,500);
+   isReadingSensor =false; //<>//
+     
+   image(image, 0, 30, displayWidth / 2, displayWidth / 2);
     
 
 }
