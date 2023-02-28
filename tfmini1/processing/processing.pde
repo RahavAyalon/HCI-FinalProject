@@ -28,9 +28,11 @@ void setup(){
   //}
   
   cp5 = new ControlP5(this);
-  font = createFont("david bold", 38);     // Custom fonts for buttons and title
+  font = createFont("david", 38);     // Custom fonts for buttons and title
+  //font = createFont("felix007 Medium", 38);     // Custom fonts for buttons and title
   image = loadImage("./lior.jpg");         // Load the image
 
+  
   background(223, 130 , 68); 
   image(image, 50, 50, displayWidth / 2, displayWidth / 2);
   fill(255, 255, 255);               
@@ -357,7 +359,7 @@ void metricsButton(){
     .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setLabel("מרחק");
+    .setLabel("מרחק נוכחי בסנטימטרים");
   
     setLock(cp5.getController("distanceButton"),true);
 
@@ -373,7 +375,7 @@ void metricsButton(){
     .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setLabel("מרחק נורמה"); 
+    .setLabel("מרחק נורמה בסנטימטרים"); 
     
      setLock(cp5.getController("initialDistanceButton"),true);
     
