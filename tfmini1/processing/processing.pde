@@ -87,7 +87,7 @@ void draw(){
 }
 
 void mySerialEvent() {
-    int inByte = port.read();                  
+    int inByte = port.read();  
     // Read a byte from the serial port
     // If this is the first byte received, and it's an A, clear the serial buffer and note that you've had first contact from the microcontroller
     if (firstContact == false) {
@@ -119,7 +119,6 @@ void mySerialEvent() {
         }
         for (int i = 0; i < list.length; i++) {
           if ((list[i].length()) > 0 && isReadingSensor == true) {
-            print(list[i]);
             if (list[i].charAt(0) == 'D') {
               fill(84, 106, 123);               
               text(list[i].substring(1), displayWidth * 2.85/8 , displayHeight * 3.2/8);  
@@ -134,7 +133,7 @@ void mySerialEvent() {
             }
             else if (list[i].charAt(0) == 'G') {
               fill(84, 106, 123);               
-              text(list[i].substring(1), displayWidth * 2.9/8 , displayHeight * 4.4/8);  
+              text(list[i].substring(1), displayWidth * 2.85/8 , displayHeight * 4.4/8);  
             }
           }
         }       
