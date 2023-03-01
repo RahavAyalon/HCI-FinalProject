@@ -110,9 +110,10 @@ void mySerialEvent() {
           background(198, 197, 195); 
           fill(255, 255, 255);
           rectMode(CENTER);
-          rect(displayWidth * 1.95/8, displayHeight * 3.5/8, displayWidth / 5, displayWidth / 16);
-          rect(displayWidth * 3.95/8, displayHeight * 3.5/8, displayWidth / 5, displayWidth / 16);
-          rect(displayWidth * 5.95/8, displayHeight * 3.5/8, displayWidth / 5, displayWidth / 16);
+          rect(displayWidth * 3/8, displayHeight * 1.95/8, displayWidth / 5, displayWidth / 16);
+          rect(displayWidth * 3/8, displayHeight * 3.15/8, displayWidth / 5, displayWidth / 16);
+          rect(displayWidth * 3/8, displayHeight * 4.35/8, displayWidth / 5, displayWidth / 16);
+          rect(displayWidth * 3/8, displayHeight * 5.55/8, displayWidth / 5, displayWidth / 16);
 
   
         }
@@ -121,15 +122,15 @@ void mySerialEvent() {
             print(list[i]);
             if (list[i].charAt(0) == 'D') {
               fill(84, 106, 123);               
-              text(list[i].substring(1), displayWidth * 1.8/8 , displayHeight * 3.5/8);  
+              text(list[i].substring(1), displayWidth * 2.8/8 , displayHeight * 3.2/8);  
             }
             else if (list[i].charAt(0) == 'S') {
               fill(84, 106, 123);               
-              text(list[i].substring(1), displayWidth * 3.8/8 , displayHeight * 3.5/8);  
+              text(list[i].substring(1), displayWidth * 2.8/8 , displayHeight * 5.6/8);  
             }
             else if (list[i].charAt(0) == 'I') {
               fill(84, 106, 123);               
-              text(list[i].substring(1), displayWidth * 5.8/8 , displayHeight * 3.5/8);  
+              text(list[i].substring(1), displayWidth * 2.85/8 , displayHeight * 2/8);  
             }
           }
         }       
@@ -407,8 +408,8 @@ void metricsButton(){
      setLock(cp5.getController("detectedAngleButton"),true);
     
     isReadingSensor = true;
-    port.write("m *");
-} //<>//
+    port.write("m *"); //<>//
+}
 
 void backToMainMenuButton() {
   background(198, 197, 195); 
