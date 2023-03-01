@@ -3,8 +3,6 @@
 #include <SoftwareSerial.h>
 #include <EEPROM.h>
 #include "TFMini.h"
-#include <Wire.h> //library allows communication with I2C / TWI devices
-#include <math.h> //library includes mathematical functions
 
 // --- Output Pins ---
 
@@ -44,13 +42,6 @@ float height = 61;          // Height (in cm) of the sensor
 float initDistance;         // Expected diagonal distance based on the angle and height
 int fallDistance = 10;      // Distance that detects fall
 
-// Accelerometer variables
-const int MPU=0x68; //I2C address of the MPU-6050
-int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ; //16-bit integers
-int AcXcal,AcYcal,AcZcal,GyXcal,GyYcal,GyZcal,tcal,startCounter=0, valCounter=0; //calibration variables
-double t,tx,tf,pitch,roll;
-
-
 void setup()
 {
   pinMode(redPin, OUTPUT);
@@ -58,12 +49,7 @@ void setup()
   pinMode(greenPin, OUTPUT);
   pinMode(vibratePin, OUTPUT);           
   pinMode(buzzerPin, OUTPUT);           
-
-  Wire.begin(); //initiate wire library and I2C
-  Wire.beginTransmission(MPU); //begin transmission to I2C slave device
-  Wire.write(0x6B); // PWR_MGMT_1 register
-  Wire.write(0); // set to zero (wakes up the MPU-6050)  
-  Wire.endTransmission(true); //ends transmission to I2C slave device
+  
   Serial.begin(115200);       // Initialize hardware serial port (serial debug port)
 
   while (!Serial);            // Wait for serial port to connect
@@ -107,7 +93,6 @@ void loop()
   // Read data from TFMini to distance and strength
   float distance = 0;
   float strength = 0;
-    
   getTFminiData(&distance, &strength);    
   while (!distance)
   {
@@ -224,15 +209,12 @@ void techMode(){
         while (!Serial);                            // Wait for serial port to connect
         
         getTFminiData(&distance, &strength);        // Read from sensor into distance and strength   
-        getRead();
        
         if (samplesCounter == 11520){               // Send only 1/11520 of the samples in over to avoid overflow
           Serial.println(" D" + String(distance));
           Serial.println("S" + String(strength));
           Serial.println("I" + String(initDistance));
-           //get pitch/roll
-          getAngle(AcX,AcY,AcZ);
-          Serial.println("G" + String(pitch));
+          Serial.println("G" + String(angle));
           samplesCounter = 0;
         }
         samplesCounter++;
@@ -312,36 +294,4 @@ void getVariables(){                // Get global variables values from EEPROM
   analogWrite(redPin,0);              // Confirmation light OFF
   analogWrite(bluePin,0);
   analogWrite(greenPin,0);
-}
-
-
-//
-
-//function to convert accelerometer values into pitch and roll
-void getRead() 
-{
-    Wire.beginTransmission(MPU); //begin transmission to I2C slave device
-    Wire.write(0x3B); // starting with register 0x3B (ACCEL_XOUT_H)
-//    Wire.endTransmission(false); //restarts transmission to I2C slave device
-//    Wire.requestFrom(MPU,2,true); //request 14 registers in total  
-
-    //read accelerometer data
-    AcX=Wire.read()<<8|Wire.read(); // 0x3B (ACCEL_XOUT_H) 0x3C (ACCEL_XOUT_L)  
-    AcY=Wire.read()<<8|Wire.read(); // 0x3D (ACCEL_YOUT_H) 0x3E (ACCEL_YOUT_L) 
-    AcZ=Wire.read()<<8|Wire.read(); // 0x3F (ACCEL_ZOUT_H) 0x40 (ACCEL_ZOUT_L)
-  
-}
-
-void getAngle(double Ax, double Ay, double Az) {
-  
-    double x = Ax;
-    double y = Ay;
-    double z = Az;
-
-    pitch = atan(x/sqrt((y*y) + (z*z))); //pitch calculation
-    roll = atan(y/sqrt((x*x) + (z*z))); //roll calculation
-
-    //converting radians into degrees
-    pitch = pitch * (180.0/3.14);
-    roll = roll * (180.0/3.14) ;
 }
