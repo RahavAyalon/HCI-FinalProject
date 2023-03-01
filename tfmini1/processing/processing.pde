@@ -27,13 +27,13 @@ void setup(){
   }
   
   cp5 = new ControlP5(this);
-  font = createFont("david", 38);     // Custom fonts for buttons and title
-  //font = createFont("felix007 Medium", 36);     // Custom fonts for buttons and title
+  //font = createFont("david", 38);     // Custom fonts for buttons and title
+  font = createFont("felix007 Medium", 36);     // Custom fonts for buttons and title
   image = loadImage("./data//lior.jpg");         // Load the image
 
   
-  background(223, 130 , 68); 
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  background(198, 197, 195); 
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05);
   fill(255, 255, 255);               
   textFont(font);
 
@@ -42,42 +42,42 @@ void setup(){
     .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("זווית החיישן")
-    .setColorBackground(color(90, 154, 215));   
+    .setColorBackground(color(98, 146, 158));   
 
   heightButton = cp5.addButton("heightButton")
     .setPosition(displayWidth * 6.75/8, displayHeight * 1.65/8) 
     .setSize(displayWidth / 7, displayWidth / 16)    
     .setFont(font)
     .setLabel("גובה החיישן")
-    .setColorBackground(color(90, 154, 215));
+    .setColorBackground(color(98, 146, 158));
 
   emergencyDialSettingsButton = cp5.addButton("emergencyDialSettingsButton")
     .setPosition(displayWidth * 6.75/8, displayHeight * 2.9/8) 
     .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("הגדרות חיוג חירום")    
-    .setColorBackground(color(90, 154, 215));
+    .setColorBackground(color(98, 146, 158));
   
   notificationTypeButton = cp5.addButton("notificationTypeButton")     
     .setPosition(displayWidth * 6.75/8, displayHeight * 4.15/8)  
     .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("סוג התראה")
-    .setColorBackground(color(90, 154, 215));
+    .setColorBackground(color(98, 146, 158));
   
     metricsButton = cp5.addButton("metricsButton")     
     .setPosition(displayWidth * 6.75/8, displayHeight * 5.4/8)  
     .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("קריאת מדדים")    
-    .setColorBackground(color(90, 154, 215));
+    .setColorBackground(color(98, 146, 158));
   
      saveButton = cp5.addButton("saveButton")     
     .setPosition(displayWidth * 6.75/8, displayHeight * 6.65/8)  
     .setSize(displayWidth / 7, displayWidth / 16)      
     .setFont(font)
     .setLabel("יציאה")    
-    .setColorBackground(color(90, 154, 215));
+    .setColorBackground(color(98, 146, 158));
 }
 
 void draw(){  
@@ -107,7 +107,7 @@ void mySerialEvent() {
     if (buffer.length() != 0) {
         String[] list = split(buffer, '\n');
         if (isReadingSensor) {
-          background(223, 130 , 68); 
+          background(198, 197, 195); 
         }
         for (int i = 0; i < list.length; i++) {
           if ((list[i].length()) > 0 && isReadingSensor == true) {
@@ -131,9 +131,9 @@ void mySerialEvent() {
 void setLock(Controller theController, boolean theValue) {
   theController.setLock(theValue);
   if(theValue) {
-    theController.setColorBackground(color(8, 44, 92));
+    theController.setColorBackground(color(84, 106, 123));
   } else {
-    theController.setColorBackground(color(8, 44, 92));
+    theController.setColorBackground(color(84, 106, 123));
   }
 }
 
@@ -156,12 +156,12 @@ void angleButton(){
     .setPosition(displayWidth * 4.25/8, displayHeight * 0.5/8)  //x and y coordinates of upper left corner of button
     .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(90, 154, 215))
+    .setColorBackground(color(98, 146, 158))
     .setLabel("שמירה");
 }
 
 void angleEnterButton() {
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
 
   angleTextfield.hide();
   angleEnterButton.hide();
@@ -173,7 +173,7 @@ void angleEnterButton() {
   metricsButton.show();
   saveButton.show();
   
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05);
   port.write("a " + angleTextfield.getText() + "*");
 }
 
@@ -195,13 +195,13 @@ void heightButton(){
     .setPosition(displayWidth * 4.25/8, displayHeight * 1.65/8) 
     .setSize(displayWidth / 7, displayWidth / 16)
     .setFont(font)
-    .setColorBackground(color(90, 154, 215))
+    .setColorBackground(color(98, 146, 158))
     .setLabel("שמירה");
 }
 
 
 void heightEnterButton() {
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
    
   heightTextfield.hide();
   heightEnterButton.hide();
@@ -213,7 +213,7 @@ void heightEnterButton() {
   metricsButton.show();
   saveButton.show();
   
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05);
   port.write("h " + heightTextfield.getText() + "*");
 }
 
@@ -234,13 +234,13 @@ void emergencyDialSettingsButton () {
     .setPosition(displayWidth * 4.25/8, displayHeight * 2.9/8)  
     .setSize(displayWidth / 7, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(90, 154, 215))
+    .setColorBackground(color(98, 146, 158))
     .setLabel("שמירה");
 }
 
 
 void emergencyDialSettingsEnterButton() {
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
   emergencyDialSettingsTextfield.hide();
   emergencyDialSettingsEnterButton.hide();
   
@@ -251,7 +251,7 @@ void emergencyDialSettingsEnterButton() {
   metricsButton.show();
   saveButton.show();
   
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05);
   port.write("e " + emergencyDialSettingsTextfield.getText() + "*");
 }
 
@@ -266,24 +266,27 @@ void notificationTypeButton () {
     .setPosition(displayWidth * 5.95/8, displayHeight * 4.15/8)
     .setSize(displayWidth / 12, displayWidth / 16)
     .setFont(font)
+    .setColorBackground(color(84, 106, 123))
     .setLabel("רטט");
     
    notificationTypeBuzzerButton = cp5.addButton("notificationTypeBuzzerButton")
   .setPosition(displayWidth * 5.15/8, displayHeight * 4.15/8)
   .setSize(displayWidth / 12, displayWidth / 16)
+  .setColorBackground(color(84, 106, 123))  
   .setFont(font)
   .setLabel("באזר");
   
    notificationTypeLedButton = cp5.addButton("notificationTypeLedButton")
   .setPosition(displayWidth * 4.35/8, displayHeight * 4.15/8)
   .setSize(displayWidth / 12, displayWidth / 16)
+  .setColorBackground(color(84, 106, 123))  
   .setFont(font)
   .setLabel("לד");
 
 }
 
 void notificationTypeVibrateButton() {
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
   
   notificationTypeVibrateButton.hide();
   notificationTypeBuzzerButton.hide();
@@ -296,12 +299,12 @@ void notificationTypeVibrateButton() {
   metricsButton.show();
   saveButton.show();
 
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05);
   port.write("n 0*");
 }
 
 void notificationTypeBuzzerButton() {
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
   
   notificationTypeVibrateButton.hide();
   notificationTypeBuzzerButton.hide();
@@ -314,12 +317,12 @@ void notificationTypeBuzzerButton() {
   metricsButton.show();
   saveButton.show();
 
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05);
   port.write("n 1*");
 }
 
 void notificationTypeLedButton() {
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
   
   notificationTypeVibrateButton.hide();
   notificationTypeBuzzerButton.hide();
@@ -332,12 +335,12 @@ void notificationTypeLedButton() {
   metricsButton.show();
   saveButton.show();
 
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05);
   port.write("n 2*");
 }
 
 void metricsButton(){
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
 
   angleButton.hide();
   heightButton.hide();
@@ -350,7 +353,7 @@ void metricsButton(){
     .setPosition(displayWidth * 0.15/8, displayHeight * 6.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
-    .setColorBackground(color(90, 154, 215))
+    .setColorBackground(color(98, 146, 158))
     .setLabel("חזרה לתפריט הראשי");
   
 
@@ -358,6 +361,7 @@ void metricsButton(){
     .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
+    .setColorBackground(color(84, 106, 123)) 
     .setLabel("מרחק נוכחי בסנטימטרים");
   
     setLock(cp5.getController("distanceButton"),true);
@@ -366,6 +370,7 @@ void metricsButton(){
     .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
+    .setColorBackground(color(84, 106, 123)) 
     .setLabel("עוצמה");  
     
      setLock(cp5.getController("strengthButton"),true);
@@ -374,6 +379,7 @@ void metricsButton(){
     .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
+    .setColorBackground(color(84, 106, 123)) 
     .setLabel("מרחק נורמה בסנטימטרים"); 
     
      setLock(cp5.getController("initialDistanceButton"),true);
@@ -383,7 +389,7 @@ void metricsButton(){
 }
 
 void backToMainMenuButton() {
-  background(223, 130 , 68); 
+  background(198, 197, 195); 
   
   backToMainMenuButton.hide();
   distanceButton.hide();
@@ -398,12 +404,12 @@ void backToMainMenuButton() {
   saveButton.show();
   
   isReadingSensor = false;
-  image(image, 50, 50, displayWidth / 2, displayWidth / 2);
+  image(image, 20, 50, displayWidth * 1.07 / 2, displayHeight * 0.85 * 1.05); 
 }
 
 
 void saveButton(){ //<>//
-    background(223, 130 , 68); 
+    background(198, 197, 195); 
     port.write("s exit*");
     exit();
 }
