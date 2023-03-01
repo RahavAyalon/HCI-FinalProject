@@ -1,4 +1,4 @@
-// --- Imports --- //<>//
+// --- Imports --- //<>// //<>//
 import controlP5.*; 
 import processing.serial.*;
 
@@ -16,13 +16,12 @@ int curChar;                         // Current character being read from Arduin
 boolean isReadingSensor = false;     // Whether we're currently reading data from the sensor
 boolean firstContact = false;        // Whether we've heard from the microcontroller 
 
- //<>//
-void setup(){
+void setup(){ //<>//
   fullScreen();
   surface.setLocation(0,0);
   printArray(Serial.list());         // Print all available serial ports
   
-  port = new Serial(this, "COM7", 115200);
+  port = new Serial(this, "COM3", 115200);
   if (port.available() > 0) {
   }
   
@@ -30,6 +29,7 @@ void setup(){
   //font = createFont("david", 38);     // Custom fonts for buttons and title
   font = createFont("felix007 Medium", 36);     // Custom fonts for buttons and title
   image = loadImage("./data//lior.jpg");         // Load the image
+  
 
   
   background(198, 197, 195); 
@@ -108,17 +108,27 @@ void mySerialEvent() {
         String[] list = split(buffer, '\n');
         if (isReadingSensor) {
           background(198, 197, 195); 
+          fill(255, 255, 255);
+          rectMode(CENTER);
+          rect(displayWidth * 1.95/8, displayHeight * 3.5/8, displayWidth / 5, displayWidth / 16);
+          rect(displayWidth * 3.95/8, displayHeight * 3.5/8, displayWidth / 5, displayWidth / 16);
+          rect(displayWidth * 5.95/8, displayHeight * 3.5/8, displayWidth / 5, displayWidth / 16);
+
+  
         }
         for (int i = 0; i < list.length; i++) {
           if ((list[i].length()) > 0 && isReadingSensor == true) {
             print(list[i]);
             if (list[i].charAt(0) == 'D') {
+              fill(84, 106, 123);               
               text(list[i].substring(1), displayWidth * 1.8/8 , displayHeight * 3.5/8);  
             }
             else if (list[i].charAt(0) == 'S') {
+              fill(84, 106, 123);               
               text(list[i].substring(1), displayWidth * 3.8/8 , displayHeight * 3.5/8);  
             }
             else if (list[i].charAt(0) == 'I') {
+              fill(84, 106, 123);               
               text(list[i].substring(1), displayWidth * 5.8/8 , displayHeight * 3.5/8);  
             }
           }
@@ -149,6 +159,7 @@ void angleButton(){
   angleTextfield = cp5.addTextfield("angleTextfield")
     .setPosition(displayWidth * 5.5/8, displayHeight * 0.5/8)
     .setSize(displayWidth / 7, displayWidth / 16)
+    .setColorBackground(color(84, 106, 123)) 
     .setFont(font)
     .setLabel("");
     
@@ -188,6 +199,7 @@ void heightButton(){
   heightTextfield = cp5.addTextfield("heightTextfield")
     .setPosition(displayWidth * 5.5/8, displayHeight * 1.65/8)
     .setSize(displayWidth / 7, displayWidth / 16)
+    .setColorBackground(color(84, 106, 123)) 
     .setFont(font)
     .setLabel("");
     
@@ -227,6 +239,7 @@ void emergencyDialSettingsButton () {
   emergencyDialSettingsTextfield = cp5.addTextfield("emergencyDialSettingsTextfield")
     .setPosition(displayWidth * 5.5/8, displayHeight * 2.9/8)
     .setSize(displayWidth / 7, displayWidth / 16)
+    .setColorBackground(color(84, 106, 123)) 
     .setFont(font)
     .setLabel("");
     
@@ -341,7 +354,7 @@ void notificationTypeLedButton() {
 
 void metricsButton(){
   background(198, 197, 195); 
-
+  
   angleButton.hide();
   heightButton.hide();
   emergencyDialSettingsButton.hide();
@@ -395,7 +408,7 @@ void backToMainMenuButton() {
   distanceButton.hide();
   strengthButton.hide();
   initialDistanceButton.hide();
-  
+   //<>//
   angleButton.show();
   heightButton.show();
   emergencyDialSettingsButton.show();
