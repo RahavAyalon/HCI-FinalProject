@@ -10,7 +10,7 @@ PImage image;
 Textfield angleTextfield, heightTextfield, emergencyDialSettingsTextfield, notificationTypeTextfield, metricsTextfield;
 Button angleButton, angleEnterButton,notificationTypeVibrateButton, notificationTypeBuzzerButton, notificationTypeLedButton, 
 strengthButton, initialDistanceButton, heightButton,distanceButton, heightEnterButton, emergencyDialSettingsButton, notificationTypeButton, 
-metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, backToMainMenuButton, saveButton;
+metricsButton, emergencyDialSettingsEnterButton, notificationTypeEnterButton, backToMainMenuButton, saveButton, detectedAngleButton;
 
 int curChar;                         // Current character being read from Arduino
 boolean isReadingSensor = false;     // Whether we're currently reading data from the sensor
@@ -371,7 +371,7 @@ void metricsButton(){
   
 
   distanceButton = cp5.addButton("distanceButton")    
-    .setPosition(displayWidth * 1.15/8, displayHeight * 1.5/8)  
+    .setPosition(displayWidth * 4.15/8, displayHeight * 2.7/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(84, 106, 123)) 
@@ -380,7 +380,7 @@ void metricsButton(){
     setLock(cp5.getController("distanceButton"),true);
 
     strengthButton = cp5.addButton("strengthButton")    
-    .setPosition(displayWidth * 3.15/8, displayHeight * 1.5/8)  
+    .setPosition(displayWidth * 4.15/8, displayHeight * 5.1/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(84, 106, 123)) 
@@ -389,7 +389,7 @@ void metricsButton(){
      setLock(cp5.getController("strengthButton"),true);
 
     initialDistanceButton = cp5.addButton("initialDistanceButton")    
-    .setPosition(displayWidth * 5.15/8, displayHeight * 1.5/8)  
+    .setPosition(displayWidth * 4.15/8, displayHeight * 1.5/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(84, 106, 123)) 
@@ -397,9 +397,18 @@ void metricsButton(){
     
      setLock(cp5.getController("initialDistanceButton"),true);
     
+    detectedAngleButton = cp5.addButton("detectedAngleButton")    
+    .setPosition(displayWidth * 4.15/8, displayHeight * 3.9/8)  
+    .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
+    .setFont(font)
+    .setColorBackground(color(84, 106, 123)) 
+    .setLabel("זווית נוכחית במעלות"); 
+    
+     setLock(cp5.getController("detectedAngleButton"),true);
+    
     isReadingSensor = true;
     port.write("m *");
-}
+} //<>//
 
 void backToMainMenuButton() {
   background(198, 197, 195); 
@@ -408,7 +417,7 @@ void backToMainMenuButton() {
   distanceButton.hide();
   strengthButton.hide();
   initialDistanceButton.hide();
-   //<>//
+  
   angleButton.show();
   heightButton.show();
   emergencyDialSettingsButton.show();
