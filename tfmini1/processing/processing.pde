@@ -134,7 +134,7 @@ void mySerialEvent() {
             }
             else if (list[i].charAt(0) == 'G') {
               fill(84, 106, 123);               
-              text(list[i].substring(1), displayWidth * 2.9/8 , displayHeight * 2/8);  
+              text(list[i].substring(1), displayWidth * 2.9/8 , displayHeight * 4.4/8);  
             }
           }
         }       
@@ -368,7 +368,7 @@ void metricsButton(){
   saveButton.hide();
 
   backToMainMenuButton = cp5.addButton("backToMainMenuButton")    
-    .setPosition(displayWidth * 0.15/8, displayHeight * 6.5/8)  
+    .setPosition(displayWidth * 0.15/8, displayHeight * 6.9/8)  
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(98, 146, 158))
@@ -422,6 +422,7 @@ void backToMainMenuButton() {
   distanceButton.hide();
   strengthButton.hide();
   initialDistanceButton.hide();
+  detectedAngleButton.hide();
   
   angleButton.show();
   heightButton.show();

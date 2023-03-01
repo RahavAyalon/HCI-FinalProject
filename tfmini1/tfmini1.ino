@@ -21,7 +21,6 @@ int val;
 float distance = 0;                   // Current distance TFMini measured from the ground
 float strength = 0;                   // The Certainity of the the distance TFMini returned
 int changeCounter = 0;                // ????????????????????????????????????????????????? 
-float angle = 0;
 float lastAverage = 0;                // The last valid average of the 25 samples of TFMini
 int samplesCounter = 0;               // How many samples we collected from TFMini in current stream
 float currentAverage = 0;             // The average of the last 25 samples of TFMini
