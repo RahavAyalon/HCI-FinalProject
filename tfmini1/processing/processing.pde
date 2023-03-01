@@ -122,7 +122,7 @@ void mySerialEvent() {
             print(list[i]);
             if (list[i].charAt(0) == 'D') {
               fill(84, 106, 123);               
-              text(list[i].substring(1), displayWidth * 2.8/8 , displayHeight * 3.2/8);  
+              text(list[i].substring(1), displayWidth * 2.85/8 , displayHeight * 3.2/8);  
             }
             else if (list[i].charAt(0) == 'S') {
               fill(84, 106, 123);               
@@ -130,7 +130,11 @@ void mySerialEvent() {
             }
             else if (list[i].charAt(0) == 'I') {
               fill(84, 106, 123);               
-              text(list[i].substring(1), displayWidth * 2.85/8 , displayHeight * 2/8);  
+              text(list[i].substring(1), displayWidth * 2.9/8 , displayHeight * 2/8);  
+            }
+            else if (list[i].charAt(0) == 'G') {
+              fill(84, 106, 123);               
+              text(list[i].substring(1), displayWidth * 2.9/8 , displayHeight * 2/8);  
             }
           }
         }       
@@ -404,11 +408,11 @@ void metricsButton(){
     .setFont(font)
     .setColorBackground(color(84, 106, 123)) 
     .setLabel("זווית נוכחית במעלות"); 
-    
+     //<>//
      setLock(cp5.getController("detectedAngleButton"),true);
     
     isReadingSensor = true;
-    port.write("m *"); //<>//
+    port.write("m *");
 }
 
 void backToMainMenuButton() {

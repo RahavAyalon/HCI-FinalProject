@@ -21,6 +21,7 @@ int val;
 float distance = 0;                   // Current distance TFMini measured from the ground
 float strength = 0;                   // The Certainity of the the distance TFMini returned
 int changeCounter = 0;                // ????????????????????????????????????????????????? 
+float angle = 0;
 float lastAverage = 0;                // The last valid average of the 25 samples of TFMini
 int samplesCounter = 0;               // How many samples we collected from TFMini in current stream
 float currentAverage = 0;             // The average of the last 25 samples of TFMini
@@ -57,7 +58,7 @@ void setup()
   Serial.println ("Initializing...");
   SerialTFMini.begin(TFMINI_BAUDRATE);    // Initialize the data rate for the SoftwareSerial port
   tfmini.begin(&SerialTFMini);            // Initialize the TF Mini sensor
-
+  
   establishConnection();                  // Send a char to establish connection until receiver responds
   delay(50);
   if (Serial.available() > 0) {           // Processing detected  
@@ -67,7 +68,7 @@ void setup()
   calculateInitDistance();                // Calculate initial normal distance of the sensor from the ground
 
   // Initilize reference average
-  for (int i = 31; 0 < i; i--) {            
+  for (int i = 31; 0 < i; i--) {
     getTFminiData(&distance, &strength);    // Read from sensor into distance
     while (!distance)
     {
@@ -75,6 +76,7 @@ void setup()
     }
     lastAverage += (distance / 25);   
   }
+
   // LED notification to user - Initialization of the program is done
   analogWrite(redPin, 200);
   analogWrite(bluePin, 0);
@@ -92,13 +94,12 @@ void loop()
   // Read data from TFMini to distance and strength
   float distance = 0;
   float strength = 0;
-
+    
   getTFminiData(&distance, &strength);    
   while (!distance)
   {
     getTFminiData(&distance, &strength);
   }
-  
   currentAverage += distance / 25;           // Calculate cuurent average according to the last samples
   samplesCounter++;                          // Update samplesCounter
        
@@ -213,6 +214,7 @@ void techMode(){
           Serial.println(" D" + String(distance));
           Serial.println("S" + String(strength));
           Serial.println("I" + String(initDistance));
+          Serial.println("G" + String(angle));
           samplesCounter = 0;
         }
         samplesCounter++;
