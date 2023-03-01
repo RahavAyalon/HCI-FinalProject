@@ -406,7 +406,7 @@ void metricsButton(){
     .setSize(displayWidth / 5, displayWidth / 16)      //(width, height)
     .setFont(font)
     .setColorBackground(color(84, 106, 123)) 
-    .setLabel("זווית נוכחית במעלות"); 
+    .setLabel("זווית נורמה בסנטימטרים"); 
      //<>//
      setLock(cp5.getController("detectedAngleButton"),true);
     
