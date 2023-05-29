@@ -1,12 +1,1 @@
-Test:  
-	- Low light  
-	- High light  
-	  
-Implement:  
-	- Procesessing
-	- Connect Processing to Arduino output  
-	- Check that Mad Zavit works properly  
-	- Create Box  
-	  
-Think about:  
-	- Strength factor in TFMini
+A system to address the specific needs of a child with mobility issues, specifically related to depth perception. By integrating a LIDAR sensor, Arduino, and a user-friendly interface written in Processing, the system effectively detects potential obstacles such as steps or sidewalk edges, providing real-time alerts to the child.
